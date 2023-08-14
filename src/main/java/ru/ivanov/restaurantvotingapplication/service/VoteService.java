@@ -1,2 +1,4 @@
-package ru.ivanov.restaurantvotingapplication.service;public interface VoteService {
+package ru.ivanov.restaurantvotingapplication.service;
+
+public interface VoteService {
 }

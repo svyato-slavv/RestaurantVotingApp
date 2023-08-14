@@ -1,2 +1,37 @@
-package ru.ivanov.restaurantvotingapplication.model;public class Dish {
+package ru.ivanov.restaurantvotingapplication.model;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+import java.util.Date;
+
+@Entity
+@Table(name = "dish")
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+public class Dish extends NamedEntity {
+    @Column(name = "price")
+    private int price;
+
+
+    @Column(name = "date", nullable = false, columnDefinition = "timestamp default now()", updatable = false)
+    @Temporal(TemporalType.TIMESTAMP)
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss",timezone = "Europe/Moscow")
+    private Date date;
+
+    @ManyToOne
+    @JoinColumn(name = "restaurant_id")
+    @JsonBackReference
+    private Restaurant restaurant;
+
 }
