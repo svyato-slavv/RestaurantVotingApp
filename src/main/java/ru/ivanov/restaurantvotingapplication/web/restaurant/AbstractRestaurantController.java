@@ -1,11 +1,11 @@
 package ru.ivanov.restaurantvotingapplication.web.restaurant;
 
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import ru.ivanov.restaurantvotingapplication.model.Dish;
 import ru.ivanov.restaurantvotingapplication.model.Restaurant;
-import ru.ivanov.restaurantvotingapplication.service.DishService;
 import ru.ivanov.restaurantvotingapplication.service.RestaurantService;
+import ru.ivanov.restaurantvotingapplication.to.RestaurantTo;
+import ru.ivanov.restaurantvotingapplication.util.RestaurantUtil;
 
 import java.util.List;
 
@@ -21,8 +21,8 @@ public abstract class AbstractRestaurantController {
         return service.restaurantList();
     }
 
-    public Restaurant get(int id) {
-        return service.get(id);
+    public RestaurantTo getWithTodayMenu(int id) {
+        return RestaurantUtil.getTos(service.get(id), service.showTodayMenu(id));
     }
 
     public Restaurant create(Restaurant restaurant) {
@@ -34,12 +34,12 @@ public abstract class AbstractRestaurantController {
         service.delete(id);
     }
 
-    public void update(Restaurant restaurant, int id) {
-        assureIdConsistent(restaurant, id);
+    public void updateRestaurant(Restaurant restaurant) {
         service.update(restaurant);
     }
 
-    public List<Dish> menu(int id) {
-       return service.showRestaurantMenu(id);
+    public List<Dish> todayMenu(int id) {
+        return service.showTodayMenu(id);
     }
+
 }

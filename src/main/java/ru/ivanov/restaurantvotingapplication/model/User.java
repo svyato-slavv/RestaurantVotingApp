@@ -14,7 +14,7 @@ import org.springframework.util.CollectionUtils;
 import ru.ivanov.restaurantvotingapplication.HasIdAndEmail;
 
 
-
+import java.io.Serializable;
 import java.util.*;
 
 @Entity
@@ -23,7 +23,7 @@ import java.util.*;
 @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
-public class User extends NamedEntity implements HasIdAndEmail {
+public class User extends NamedEntity implements Serializable, HasIdAndEmail {
 
     @Column(name = "email", nullable = false, unique = true)
     @Email

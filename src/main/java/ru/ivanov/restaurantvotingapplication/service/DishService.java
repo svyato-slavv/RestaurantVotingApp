@@ -1,13 +1,15 @@
 package ru.ivanov.restaurantvotingapplication.service;
 
 import ru.ivanov.restaurantvotingapplication.model.Dish;
+import ru.ivanov.restaurantvotingapplication.model.Restaurant;
+import ru.ivanov.restaurantvotingapplication.to.DishTo;
 
 import java.util.List;
 import java.util.Optional;
 
 public interface DishService {
 
-    Optional<Dish> get(int id);
+    Dish get(int id);
 
     Dish create(Dish dish);
 
@@ -17,4 +19,5 @@ public interface DishService {
 
 
     void update(Dish dish);
+
 }

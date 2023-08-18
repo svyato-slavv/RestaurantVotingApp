@@ -1,6 +1,5 @@
 package ru.ivanov.restaurantvotingapplication.web.restaurant;
 
-import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -8,11 +7,12 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import ru.ivanov.restaurantvotingapplication.model.Dish;
 import ru.ivanov.restaurantvotingapplication.model.Restaurant;
+import ru.ivanov.restaurantvotingapplication.to.RestaurantTo;
 
 import java.net.URI;
-import java.util.Date;
 import java.util.List;
 
+import static ru.ivanov.restaurantvotingapplication.util.ValidationUtil.assureIdConsistent;
 import static ru.ivanov.restaurantvotingapplication.util.ValidationUtil.checkNew;
 
 @RestController
@@ -27,8 +27,8 @@ public class AdminRestaurantController extends AbstractRestaurantController {
     }
 
     @GetMapping("/{id}")
-    public Restaurant get(@PathVariable int id) {
-        return super.get(id);
+    public RestaurantTo getWithTodayMenu(@PathVariable int id) {
+        return super.getWithTodayMenu(id);
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
@@ -44,7 +44,8 @@ public class AdminRestaurantController extends AbstractRestaurantController {
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void update(@RequestBody Restaurant restaurant, @PathVariable int id) {
-        super.update(restaurant, id);
+        assureIdConsistent(restaurant,id);
+        super.updateRestaurant(restaurant);
     }
 
     @DeleteMapping("/{id}")
@@ -54,8 +55,8 @@ public class AdminRestaurantController extends AbstractRestaurantController {
     }
 
     @GetMapping("/{id}/dishes")
-    public List<Dish> menuOfRestaurant(@PathVariable int id) {
-       return super.menu(id);
+    public List<Dish> todayMenuOfRestaurant(@PathVariable int id) {
+       return super.todayMenu(id);
     }
 
 

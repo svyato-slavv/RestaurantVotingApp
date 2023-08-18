@@ -3,8 +3,8 @@ package ru.ivanov.restaurantvotingapplication.service;
 import ru.ivanov.restaurantvotingapplication.model.Dish;
 import ru.ivanov.restaurantvotingapplication.model.Restaurant;
 
+import java.util.Date;
 import java.util.List;
-import java.util.Optional;
 
 public interface RestaurantService {
 
@@ -18,5 +18,6 @@ public interface RestaurantService {
 
     List<Restaurant> restaurantList();
 
-    List<Dish> showRestaurantMenu(int id);
+    List<Dish> showTodayMenu(int id);
+
 }

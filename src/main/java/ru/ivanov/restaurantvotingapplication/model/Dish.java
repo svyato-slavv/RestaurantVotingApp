@@ -1,8 +1,6 @@
 package ru.ivanov.restaurantvotingapplication.model;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.*;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -29,7 +27,7 @@ public class Dish extends NamedEntity {
     @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss",timezone = "Europe/Moscow")
     private Date date;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "restaurant_id")
     @JsonBackReference
     private Restaurant restaurant;

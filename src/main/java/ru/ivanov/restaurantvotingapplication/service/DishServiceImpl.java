@@ -2,11 +2,15 @@ package ru.ivanov.restaurantvotingapplication.service;
 
 import jakarta.persistence.Table;
 import lombok.RequiredArgsConstructor;
+import org.hibernate.Hibernate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 import ru.ivanov.restaurantvotingapplication.model.Dish;
+import ru.ivanov.restaurantvotingapplication.model.Restaurant;
 import ru.ivanov.restaurantvotingapplication.repository.DishRepository;
+import ru.ivanov.restaurantvotingapplication.to.DishTo;
+import ru.ivanov.restaurantvotingapplication.util.DishUtil;
 import ru.ivanov.restaurantvotingapplication.util.ValidationUtil;
 
 import java.util.Date;
@@ -24,9 +28,10 @@ public class DishServiceImpl implements DishService {
     private final DishRepository repository;
 
     @Override
-    public Optional<Dish> get(int id) {
-        return repository.findById(id);
+    public Dish get(int id) {
+        return repository.findWithJoinFetch(id).orElseThrow();
     }
+
 
     @Override
     @Transactional
@@ -49,7 +54,8 @@ public class DishServiceImpl implements DishService {
     @Override
     @Transactional
     public void update(Dish dish) {
-        Assert.notNull(dish, "user must not be null");
+        Assert.notNull(dish, "dish must not be null");
         checkNotFoundWithId(repository.save(dish), dish.id());
     }
+
 }

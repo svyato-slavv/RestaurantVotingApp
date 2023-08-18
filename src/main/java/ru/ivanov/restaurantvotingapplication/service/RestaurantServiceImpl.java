@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.time.DateUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.Assert;
 import ru.ivanov.restaurantvotingapplication.model.Dish;
 import ru.ivanov.restaurantvotingapplication.model.Restaurant;
 import ru.ivanov.restaurantvotingapplication.repository.DishRepository;
@@ -14,6 +15,7 @@ import java.util.Date;
 import java.util.List;
 
 import static ru.ivanov.restaurantvotingapplication.util.ValidationUtil.checkNotFoundWithId;
+
 
 @Service
 @Transactional(readOnly = true)
@@ -43,7 +45,8 @@ public class RestaurantServiceImpl implements RestaurantService {
     @Transactional
     @Override
     public void update(Restaurant restaurant) {
-        restaurantRepository.save(restaurant);
+        Assert.notNull(restaurant, "restaurant must not be null");
+        checkNotFoundWithId(restaurantRepository.save(restaurant), restaurant.id());
     }
 
     @Transactional
@@ -53,7 +56,7 @@ public class RestaurantServiceImpl implements RestaurantService {
     }
 
     @Override
-    public List<Dish> showRestaurantMenu(int id) {
+    public List<Dish> showTodayMenu(int id) {
         List<Dish> menuOfDay = new ArrayList<>();
         Date dateNow = new Date();
         for (Dish dish : dishRepository.findAllByRestaurantId(id)) {
@@ -63,4 +66,5 @@ public class RestaurantServiceImpl implements RestaurantService {
         }
         return menuOfDay;
     }
+
 }
