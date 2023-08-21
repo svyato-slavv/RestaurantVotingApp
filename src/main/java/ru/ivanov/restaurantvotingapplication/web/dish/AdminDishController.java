@@ -7,15 +7,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import ru.ivanov.restaurantvotingapplication.model.Dish;
-import ru.ivanov.restaurantvotingapplication.model.Restaurant;
+import ru.ivanov.restaurantvotingapplication.repository.DishRepository;
 import ru.ivanov.restaurantvotingapplication.service.DishService;
-import ru.ivanov.restaurantvotingapplication.service.RestaurantService;
 import ru.ivanov.restaurantvotingapplication.to.DishTo;
 import ru.ivanov.restaurantvotingapplication.util.DishUtil;
 
 import java.net.URI;
 import java.util.List;
-import java.util.Optional;
+
 
 import static ru.ivanov.restaurantvotingapplication.util.ValidationUtil.assureIdConsistent;
 import static ru.ivanov.restaurantvotingapplication.util.ValidationUtil.checkNew;
@@ -26,10 +25,11 @@ import static ru.ivanov.restaurantvotingapplication.util.ValidationUtil.checkNew
 public class AdminDishController {
     static final String REST_URL = "/admin/dishes";
     private final DishService service;
+    private final DishRepository repository;
 
-    @GetMapping() // получаем список всех блюд
+    @GetMapping() // получаем список всех блюд с ресторанами, сортированные по id ресторана по возрастанию
     public List<Dish> getDishes() {
-        return service.getAll();
+        return repository.findAllSortedByRestaurantId();
     }
 
     @GetMapping("/{id}") //получаем конкретное блюдо с рестораном
@@ -37,7 +37,7 @@ public class AdminDishController {
         return DishUtil.getTosWithRestaurant(service.get(id));
     }
 
-    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)//создаем ресторан
     public ResponseEntity<Dish> createWithLocation(@RequestBody Dish dish) {
         checkNew(dish);
         Dish created = service.create(dish);
@@ -47,7 +47,7 @@ public class AdminDishController {
         return ResponseEntity.created(uriOfNewResource).body(created);
     }
 
-    @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)//изменяем еду или назначаем ей ресторан
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void updateOrAssignRestaurant(@RequestBody Dish dish, @PathVariable int id) {
         assureIdConsistent(dish, id);
@@ -55,7 +55,7 @@ public class AdminDishController {
     }
 
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/{id}")//удаление еды
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable int id) {
         service.delete(id);

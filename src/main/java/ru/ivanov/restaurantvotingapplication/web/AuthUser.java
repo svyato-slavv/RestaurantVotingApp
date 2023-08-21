@@ -2,7 +2,6 @@ package ru.ivanov.restaurantvotingapplication.web;
 
 import lombok.Getter;
 import lombok.NonNull;
-import lombok.ToString;
 import ru.ivanov.restaurantvotingapplication.model.User;
 
 @Getter

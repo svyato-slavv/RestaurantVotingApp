@@ -19,27 +19,27 @@ public abstract class AbstractRestaurantController {
 
     public List<Restaurant> getAll() {
         return service.restaurantList();
-    }
+    }//список ресторанов
 
     public RestaurantTo getWithTodayMenu(int id) {
         return RestaurantUtil.getTos(service.get(id), service.showTodayMenu(id));
-    }
+    }//ресторан с сегодняшним меню
 
     public Restaurant create(Restaurant restaurant) {
         checkNew(restaurant);
         return service.create(restaurant);
-    }
+    }//создать ресторан
 
     public void delete(int id) {
         service.delete(id);
-    }
+    }//удалить ресторан
 
     public void updateRestaurant(Restaurant restaurant) {
         service.update(restaurant);
-    }
+    }//редактировать ресторан
 
     public List<Dish> todayMenu(int id) {
         return service.showTodayMenu(id);
-    }
+    }//показать только сегодняшнее меню ресторана
 
 }

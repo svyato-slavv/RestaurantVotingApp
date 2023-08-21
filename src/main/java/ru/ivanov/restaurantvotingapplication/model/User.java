@@ -1,6 +1,7 @@
 package ru.ivanov.restaurantvotingapplication.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
@@ -22,7 +23,6 @@ import java.util.*;
 @Getter
 @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@AllArgsConstructor
 public class User extends NamedEntity implements Serializable, HasIdAndEmail {
 
     @Column(name = "email", nullable = false, unique = true)
@@ -59,6 +59,7 @@ public class User extends NamedEntity implements Serializable, HasIdAndEmail {
     private Set<Role> roles;
 
     @OneToMany(fetch = FetchType.LAZY,mappedBy = "user")
+    @JsonIgnore
     private List<Vote> votes;
 
     public User(User u) {

@@ -17,4 +17,7 @@ public interface DishRepository extends JpaRepository<Dish, Integer> {
     @Query("select d from Dish d join fetch d.restaurant where d.id=:id")
     Optional<Dish> findWithJoinFetch(@Param("id") int id);
 
+    @Query("select d from Dish d order by d.restaurant.id ASC")
+    List<Dish> findAllSortedByRestaurantId();
+
 }

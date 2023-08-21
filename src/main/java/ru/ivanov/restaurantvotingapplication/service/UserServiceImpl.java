@@ -10,6 +10,7 @@ import ru.ivanov.restaurantvotingapplication.repository.UserRepository;
 import java.util.List;
 
 
+import static ru.ivanov.restaurantvotingapplication.config.SecurityConfig.PASSWORD_ENCODER;
 import static ru.ivanov.restaurantvotingapplication.util.ValidationUtil.checkNotFoundWithId;
 
 @Service
@@ -41,6 +42,14 @@ public class UserServiceImpl implements UserService {
     public void update(User user) {
         Assert.notNull(user, "user must not be null");
         checkNotFoundWithId(repository.save(user), user.id());
+    }
+
+    @Transactional
+    @Override
+    public User prepareAndSave(User user) {
+        user.setPassword(PASSWORD_ENCODER.encode(user.getPassword()));
+        user.setEmail(user.getEmail().toLowerCase());
+        return repository.save(user);
     }
 
     @Transactional

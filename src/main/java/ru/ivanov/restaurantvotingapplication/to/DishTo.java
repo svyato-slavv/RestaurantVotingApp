@@ -10,14 +10,12 @@ public class DishTo {
     Integer price;
     Restaurant restaurant;
 
-    public DishTo(Integer id, String name, Integer price) {
-        this.id = id;
+    public DishTo( String name, Integer price) {
         this.name = name;
         this.price = price;
     }
 
-    public DishTo(Integer id, String name, Integer price, Restaurant restaurant) {
-        this.id = id;
+    public DishTo(String name, Integer price, Restaurant restaurant) {
         this.name = name;
         this.price = price;
         this.restaurant = restaurant;
