@@ -9,7 +9,6 @@ import ru.ivanov.restaurantvotingapplication.util.RestaurantUtil;
 
 import java.util.List;
 
-import static ru.ivanov.restaurantvotingapplication.util.ValidationUtil.assureIdConsistent;
 import static ru.ivanov.restaurantvotingapplication.util.ValidationUtil.checkNew;
 
 

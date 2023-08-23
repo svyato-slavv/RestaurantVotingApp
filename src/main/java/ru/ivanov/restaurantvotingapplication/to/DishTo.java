@@ -1,16 +1,27 @@
 package ru.ivanov.restaurantvotingapplication.to;
 
+import jakarta.persistence.criteria.CriteriaBuilder;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import ru.ivanov.restaurantvotingapplication.model.Restaurant;
 
+import java.util.Date;
+
 @Data
-public class DishTo {
-    Integer id;
+@EqualsAndHashCode(callSuper = true)
+public class DishTo extends BaseTo {
+
     String name;
+    Date date;
+
     Integer price;
     Restaurant restaurant;
 
-    public DishTo( String name, Integer price) {
+    public DishTo() {
+
+    }
+
+    public DishTo(String name, Integer price) {
         this.name = name;
         this.price = price;
     }

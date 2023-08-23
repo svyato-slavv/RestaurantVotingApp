@@ -34,11 +34,11 @@ public class User extends NamedEntity implements Serializable, HasIdAndEmail {
     @Column(name = "password", nullable = false)
     @NotBlank
     @Size(max = 128)
-    // https://stackoverflow.com/a/12505165/548473
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
 
     @Column(name = "enabled", nullable = false, columnDefinition = "bool default true")
+    @JsonIgnore
     private boolean enabled = true;
 
     @Column(name = "registered", nullable = false, columnDefinition = "timestamp default now()", updatable = false)
@@ -46,7 +46,7 @@ public class User extends NamedEntity implements Serializable, HasIdAndEmail {
     @Temporal(TemporalType.TIMESTAMP)
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss", timezone = "Europe/Moscow")
-    private Date registered = new Date();
+    private Date registered;
 
     @Enumerated(EnumType.STRING)
     @CollectionTable(name = "user_role",
@@ -56,9 +56,11 @@ public class User extends NamedEntity implements Serializable, HasIdAndEmail {
     @ElementCollection(fetch = FetchType.EAGER)
     @JoinColumn
     @OnDelete(action = OnDeleteAction.CASCADE)
+    @JsonIgnore
     private Set<Role> roles;
 
     @OneToMany(fetch = FetchType.LAZY,mappedBy = "user")
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @JsonIgnore
     private List<Vote> votes;
 

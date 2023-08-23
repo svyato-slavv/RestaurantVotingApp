@@ -37,10 +37,10 @@ public class AdminDishController {
         return DishUtil.getTosWithRestaurant(service.get(id));
     }
 
-    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)//создаем ресторан
-    public ResponseEntity<Dish> createWithLocation(@RequestBody Dish dish) {
-        checkNew(dish);
-        Dish created = service.create(dish);
+    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)//создаем еду
+    public ResponseEntity<Dish> createWithLocation(@RequestBody DishTo dishTo) {
+        checkNew(dishTo);
+        Dish created = service.create(DishUtil.createNewFromTo(dishTo));
         URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath()
                 .path(REST_URL + "/{id}")
                 .buildAndExpand(created.getId()).toUri();
@@ -49,9 +49,9 @@ public class AdminDishController {
 
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)//изменяем еду или назначаем ей ресторан
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void updateOrAssignRestaurant(@RequestBody Dish dish, @PathVariable int id) {
+    public void update(@RequestBody Dish dish, @PathVariable int id) {
         assureIdConsistent(dish, id);
-        service.update(dish);
+        service.update(dish,id);
     }
 
 

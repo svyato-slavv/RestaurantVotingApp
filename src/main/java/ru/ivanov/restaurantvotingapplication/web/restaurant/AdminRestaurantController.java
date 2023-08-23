@@ -1,5 +1,6 @@
 package ru.ivanov.restaurantvotingapplication.web.restaurant;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -7,6 +8,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import ru.ivanov.restaurantvotingapplication.model.Dish;
 import ru.ivanov.restaurantvotingapplication.model.Restaurant;
+import ru.ivanov.restaurantvotingapplication.service.RestaurantService;
+import ru.ivanov.restaurantvotingapplication.to.DishTo;
 import ru.ivanov.restaurantvotingapplication.to.RestaurantTo;
 
 import java.net.URI;
@@ -17,8 +20,10 @@ import static ru.ivanov.restaurantvotingapplication.util.ValidationUtil.checkNew
 
 @RestController
 @RequestMapping(value = AdminRestaurantController.REST_URL, produces = MediaType.APPLICATION_JSON_VALUE)
+@RequiredArgsConstructor
 public class AdminRestaurantController extends AbstractRestaurantController {
     static final String REST_URL = "/admin/restaurants";
+    private final RestaurantService service;
 
 
     @GetMapping()
@@ -41,10 +46,11 @@ public class AdminRestaurantController extends AbstractRestaurantController {
         return ResponseEntity.created(uriOfNewResource).body(created);
     }
 
+
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void update(@RequestBody Restaurant restaurant, @PathVariable int id) {
-        assureIdConsistent(restaurant,id);
+        assureIdConsistent(restaurant, id);
         super.updateRestaurant(restaurant);
     }
 
@@ -56,7 +62,14 @@ public class AdminRestaurantController extends AbstractRestaurantController {
 
     @GetMapping("/{id}/dishes")
     public List<Dish> todayMenuOfRestaurant(@PathVariable int id) {
-       return super.todayMenu(id);
+        return super.todayMenu(id);
+    }
+
+    @PostMapping(value = "/{id}/dishes", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void updateMenu(@RequestBody List<DishTo> newMenu, @PathVariable int id) {
+        service.deleteOldTodayMenu(id);
+        service.newMenu(newMenu, id);
     }
 
 

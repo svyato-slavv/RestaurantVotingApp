@@ -1,6 +1,5 @@
 package ru.ivanov.restaurantvotingapplication.model;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
@@ -8,10 +7,12 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.apache.commons.lang3.time.DateUtils;
 import org.hibernate.annotations.Formula;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
+import java.util.Date;
 import java.util.List;
 
 @Entity
@@ -21,8 +22,18 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Restaurant extends NamedEntity {
-    @Formula("(SELECT COUNT(*) FROM VOTE v WHERE v.restaurant_id = id)")
+    @Transient
     private Integer voteCount;
+
+    public Integer getVoteCount() {
+        voteCount = 0;
+        for (Vote vote : votes) {
+            if (DateUtils.isSameDay(vote.getVoteDate(), new Date())) {
+                voteCount++;
+            }
+        }
+        return voteCount;
+    }
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "restaurant")
     @OnDelete(action = OnDeleteAction.CASCADE)
@@ -35,4 +46,14 @@ public class Restaurant extends NamedEntity {
     @JsonManagedReference
     @JsonIgnore
     private List<Vote> votes = new java.util.ArrayList<>();
+
+    public Restaurant(List<Dish> menu) {
+        this.menu = menu;
+    }
+
+    public Restaurant(Integer id, String name, List<Dish> menu) {
+        super(id, name);
+        this.menu = menu;
+    }
+
 }

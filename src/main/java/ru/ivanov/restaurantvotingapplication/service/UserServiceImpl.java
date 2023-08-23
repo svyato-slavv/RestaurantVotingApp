@@ -1,12 +1,16 @@
 package ru.ivanov.restaurantvotingapplication.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
+import ru.ivanov.restaurantvotingapplication.error.NotFoundException;
+import ru.ivanov.restaurantvotingapplication.model.Role;
 import ru.ivanov.restaurantvotingapplication.model.User;
 import ru.ivanov.restaurantvotingapplication.repository.UserRepository;
 
+import java.util.Collections;
 import java.util.List;
 
 
@@ -22,12 +26,12 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<User> getAll() {
-        return repository.findAll();
+        return repository.findAll(Sort.by(Sort.Direction.ASC, "name", "email"));
     }
 
     @Override
     public User get(int id) {
-        return repository.findById(id).orElseThrow();
+        return repository.findById(id).orElseThrow(()->new NotFoundException("User with id = "+id+" not found"));
     }
 
     @Transactional
@@ -49,6 +53,7 @@ public class UserServiceImpl implements UserService {
     public User prepareAndSave(User user) {
         user.setPassword(PASSWORD_ENCODER.encode(user.getPassword()));
         user.setEmail(user.getEmail().toLowerCase());
+        user.setRoles(Collections.singletonList(Role.USER));
         return repository.save(user);
     }
 

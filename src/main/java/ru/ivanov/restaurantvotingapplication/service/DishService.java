@@ -18,6 +18,6 @@ public interface DishService {
     List<Dish> getAll();
 
 
-    void update(Dish dish);
+    void update(Dish dish, int restaurantId);
 
 }

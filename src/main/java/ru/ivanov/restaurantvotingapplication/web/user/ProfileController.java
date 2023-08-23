@@ -1,10 +1,12 @@
 package ru.ivanov.restaurantvotingapplication.web.user;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import ru.ivanov.restaurantvotingapplication.model.User;
@@ -24,6 +26,13 @@ import static ru.ivanov.restaurantvotingapplication.util.ValidationUtil.checkNew
 public class ProfileController {
     static final String REST_URL = "/profile";
     private final UserService service;
+
+    private final UniqueMailValidator emailValidator;
+
+    @InitBinder
+    protected void initBinder(WebDataBinder binder) {
+        binder.addValidators(emailValidator);
+    }
 
     @GetMapping()
     public User get(@AuthenticationPrincipal AuthUser authUser) {
@@ -48,7 +57,7 @@ public class ProfileController {
 
     @PutMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void update(@RequestBody UserTo userTo,@AuthenticationPrincipal AuthUser authUser) {
+    public void update(@RequestBody UserTo userTo, @AuthenticationPrincipal AuthUser authUser) {
         assureIdConsistent(userTo, authUser.id());
         User user = authUser.getUser();
         service.prepareAndSave(UsersUtil.updateFromTo(user, userTo));
