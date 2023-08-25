@@ -8,10 +8,6 @@ import ru.ivanov.restaurantvotingapplication.service.RestaurantService;
 @SpringBootApplication
 @RequiredArgsConstructor
 public class RestaurantVotingApplication {
-
-    private final RestaurantService restaurantService;
-
-
     public static void main(String[] args) {
         SpringApplication.run(RestaurantVotingApplication.class, args);
     }

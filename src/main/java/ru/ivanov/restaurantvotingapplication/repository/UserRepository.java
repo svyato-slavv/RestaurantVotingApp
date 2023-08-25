@@ -6,6 +6,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import ru.ivanov.restaurantvotingapplication.model.User;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository

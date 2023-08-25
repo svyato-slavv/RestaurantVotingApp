@@ -14,10 +14,13 @@ import java.util.List;
 @Setter
 public class RestaurantTo extends NamedTo {
     List<DishTo> menu;
+    Integer voteCount;
 
-    public RestaurantTo(Integer id, String name, List<DishTo> menu) {
+
+    public RestaurantTo(Integer id, String name, List<DishTo> menu, Integer voteCount) {
         super(id, name);
         this.menu = menu;
+        this.voteCount = voteCount;
     }
 
 }

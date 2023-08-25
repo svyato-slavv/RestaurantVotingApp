@@ -27,17 +27,20 @@ public class AdminDishController {
     private final DishService service;
     private final DishRepository repository;
 
-    @GetMapping() // получаем список всех блюд с ресторанами, сортированные по id ресторана по возрастанию
-    public List<Dish> getDishes() {
-        return repository.findAllSortedByRestaurantId();
+    @GetMapping()
+    public List<DishTo> getAllWithRestaurant() {
+        return service.getSorted()
+                .stream()
+                .map(DishUtil::getToWithRestaurant)
+                .toList();
     }
 
-    @GetMapping("/{id}") //получаем конкретное блюдо с рестораном
+    @GetMapping("/{id}")
     public DishTo get(@PathVariable int id) {
-        return DishUtil.getTosWithRestaurant(service.get(id));
+        return DishUtil.getToWithRestaurant(service.get(id));
     }
 
-    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)//создаем еду
+    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Dish> createWithLocation(@RequestBody DishTo dishTo) {
         checkNew(dishTo);
         Dish created = service.create(DishUtil.createNewFromTo(dishTo));
@@ -47,11 +50,12 @@ public class AdminDishController {
         return ResponseEntity.created(uriOfNewResource).body(created);
     }
 
-    @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)//изменяем еду или назначаем ей ресторан
+    @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void update(@RequestBody Dish dish, @PathVariable int id) {
-        assureIdConsistent(dish, id);
-        service.update(dish,id);
+    public void update(@RequestBody DishTo dishTo, @PathVariable int id) {
+        Dish dish = repository.findById(id).orElseThrow();
+        assureIdConsistent(dishTo, id);
+        service.update(dish, dishTo);
     }
 
 

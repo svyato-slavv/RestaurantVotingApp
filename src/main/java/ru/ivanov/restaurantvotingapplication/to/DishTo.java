@@ -1,8 +1,7 @@
 package ru.ivanov.restaurantvotingapplication.to;
 
 import jakarta.persistence.criteria.CriteriaBuilder;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.*;
 import ru.ivanov.restaurantvotingapplication.model.Restaurant;
 
 import java.util.Date;

@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.lang.Nullable;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import ru.ivanov.restaurantvotingapplication.model.Dish;
@@ -13,6 +14,7 @@ import ru.ivanov.restaurantvotingapplication.to.DishTo;
 import ru.ivanov.restaurantvotingapplication.to.RestaurantTo;
 
 import java.net.URI;
+import java.time.LocalDate;
 import java.util.List;
 
 import static ru.ivanov.restaurantvotingapplication.util.ValidationUtil.assureIdConsistent;
@@ -34,6 +36,16 @@ public class AdminRestaurantController extends AbstractRestaurantController {
     @GetMapping("/{id}")
     public RestaurantTo getWithTodayMenu(@PathVariable int id) {
         return super.getWithTodayMenu(id);
+    }
+
+    @GetMapping("/{id}/filter")
+    public RestaurantTo getWithMenuByDate(
+            @RequestParam @Nullable LocalDate date,
+            @PathVariable int id) {
+        if (date==null){
+            return super.getWithTodayMenu(id);
+        }
+        return super.getWithMenuByDate(id,date);
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
@@ -69,7 +81,7 @@ public class AdminRestaurantController extends AbstractRestaurantController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void updateMenu(@RequestBody List<DishTo> newMenu, @PathVariable int id) {
         service.deleteOldTodayMenu(id);
-        service.newMenu(newMenu, id);
+        service.setNewMenu(newMenu, id);
     }
 
 

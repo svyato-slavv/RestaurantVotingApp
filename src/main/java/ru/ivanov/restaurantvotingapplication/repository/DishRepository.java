@@ -6,8 +6,6 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import ru.ivanov.restaurantvotingapplication.model.Dish;
 
-import java.time.LocalDate;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -16,10 +14,11 @@ public interface DishRepository extends JpaRepository<Dish, Integer> {
 
     List<Dish> findAllByRestaurantId(int id);
 
-    @Query("select d from Dish d join fetch d.restaurant where d.id=:id")
-    Optional<Dish> findWithJoinFetch(@Param("id") int id);
+    @Query("select d from Dish d join fetch d.restaurant order by d.restaurant.id ASC")
+    List<Dish> findSortedList();
 
-    @Query("select d from Dish d order by d.restaurant.id ASC")
-    List<Dish> findAllSortedByRestaurantId();
+    @Query("select d from Dish d join fetch d.restaurant where d.id=:id")
+    Optional<Dish> findOneWithJoinFetch(@Param("id") int id);
+
 
 }

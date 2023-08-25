@@ -1,37 +1,36 @@
 package ru.ivanov.restaurantvotingapplication.util;
 
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.experimental.UtilityClass;
-import org.springframework.beans.factory.annotation.Autowired;
-import ru.ivanov.restaurantvotingapplication.model.Dish;
-import ru.ivanov.restaurantvotingapplication.model.Restaurant;
-import ru.ivanov.restaurantvotingapplication.service.RestaurantService;
-import ru.ivanov.restaurantvotingapplication.to.DishTo;
-import ru.ivanov.restaurantvotingapplication.to.RestaurantTo;
 
-import java.util.Date;
+import lombok.experimental.UtilityClass;
+import ru.ivanov.restaurantvotingapplication.model.Dish;
+import ru.ivanov.restaurantvotingapplication.to.DishTo;
+
 import java.util.List;
 
 @UtilityClass
 public class DishUtil {
 
-    public static final Date TODAY = new Date();
-
-    public static DishTo getTos(Dish dish) {
+    public static DishTo getTo(Dish dish) {
         return new DishTo(dish.getName(), dish.getPrice());
     }
 
-    public static List<Dish> menuFromTo(List<DishTo> dishToList){
+    public static List<Dish> menuFromTos(List<DishTo> dishToList) {
         return dishToList.stream().map(DishUtil::getDishFromTo).toList();
     }
 
-    public static DishTo getTosWithRestaurant(Dish dish) {
+    public static DishTo getToWithRestaurant(Dish dish) {
         return new DishTo(dish.getName(), dish.getPrice(), dish.getRestaurant());
     }
 
     public static Dish createNewFromTo(DishTo dishTo) {
         return new Dish(null, dishTo.getName(), dishTo.getPrice(), dishTo.getRestaurant());
+    }
+
+    public static Dish updateFromTo(Dish dish, DishTo dishTo) {
+        dish.setName(dishTo.getName());
+        dish.setPrice(dishTo.getPrice());
+        dish.setRestaurant(dishTo.getRestaurant());
+        return dish;
     }
 
     public static Dish getDishFromTo(DishTo dishTo) {

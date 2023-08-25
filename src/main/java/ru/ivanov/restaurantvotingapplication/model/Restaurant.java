@@ -8,7 +8,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.apache.commons.lang3.time.DateUtils;
-import org.hibernate.annotations.Formula;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
@@ -24,16 +23,6 @@ import java.util.List;
 public class Restaurant extends NamedEntity {
     @Transient
     private Integer voteCount;
-
-    public Integer getVoteCount() {
-        voteCount = 0;
-        for (Vote vote : votes) {
-            if (DateUtils.isSameDay(vote.getVoteDate(), new Date())) {
-                voteCount++;
-            }
-        }
-        return voteCount;
-    }
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "restaurant")
     @OnDelete(action = OnDeleteAction.CASCADE)
@@ -56,4 +45,19 @@ public class Restaurant extends NamedEntity {
         this.menu = menu;
     }
 
+
+    public Integer getVoteCount(Date inputDate) {
+        voteCount = 0;
+        Date date;
+        if (inputDate == null) {
+            date = new Date();
+        } else date = inputDate;
+
+        for (Vote vote : votes) {
+            if (DateUtils.isSameDay(vote.getVoteDate(), date)) {
+                voteCount++;
+            }
+        }
+        return voteCount;
+    }
 }

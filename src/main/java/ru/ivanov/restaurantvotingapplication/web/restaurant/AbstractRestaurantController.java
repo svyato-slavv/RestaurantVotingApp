@@ -7,6 +7,9 @@ import ru.ivanov.restaurantvotingapplication.service.RestaurantService;
 import ru.ivanov.restaurantvotingapplication.to.RestaurantTo;
 import ru.ivanov.restaurantvotingapplication.util.RestaurantUtil;
 
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.Date;
 import java.util.List;
 
 import static ru.ivanov.restaurantvotingapplication.util.ValidationUtil.checkNew;
@@ -16,29 +19,37 @@ public abstract class AbstractRestaurantController {
     @Autowired
     private RestaurantService service;
 
+
     public List<Restaurant> getAll() {
         return service.restaurantList();
-    }//список ресторанов
+    }
 
     public RestaurantTo getWithTodayMenu(int id) {
-        return RestaurantUtil.getTos(service.get(id), service.showTodayMenu(id));
-    }//ресторан с сегодняшним меню
+        Restaurant restaurant=service.get(id);
+        return RestaurantUtil.getTo(restaurant, service.showTodayMenu(id), restaurant.getVoteCount(null));
+    }
+
+    public RestaurantTo getWithMenuByDate(int id, LocalDate localDate){
+        Restaurant restaurant=service.get(id);
+        Date date= Date.from(localDate.atStartOfDay().atZone(ZoneId.systemDefault()).toInstant());
+        return RestaurantUtil.getTo(restaurant,service.showMenuByDate(id, localDate), restaurant.getVoteCount(date));
+    }
 
     public Restaurant create(Restaurant restaurant) {
         checkNew(restaurant);
         return service.create(restaurant);
-    }//создать ресторан
+    }
 
     public void delete(int id) {
         service.delete(id);
-    }//удалить ресторан
+    }
 
     public void updateRestaurant(Restaurant restaurant) {
         service.update(restaurant);
-    }//редактировать ресторан
+    }
 
     public List<Dish> todayMenu(int id) {
         return service.showTodayMenu(id);
-    }//показать только сегодняшнее меню ресторана
+    }
 
 }

@@ -10,11 +10,7 @@ import java.util.stream.Collectors;
 
 @UtilityClass
 public class RestaurantUtil {
-    public static RestaurantTo getTos(Restaurant restaurant, List<Dish> menu) {
-        return new RestaurantTo(restaurant.getId(), restaurant.getName(), menu.stream().map(DishUtil::getTos).collect(Collectors.toList()));
-    }
-
-    public static Restaurant getFromTo(RestaurantTo restaurantTo) {
-        return new Restaurant(restaurantTo.getId(), restaurantTo.getName(), DishUtil.menuFromTo(restaurantTo.getMenu()));
+    public static RestaurantTo getTo(Restaurant restaurant, List<Dish> menu, Integer voteCount) {
+        return new RestaurantTo(restaurant.getId(), restaurant.getName(), menu.stream().map(DishUtil::getTo).collect(Collectors.toList()), voteCount);
     }
 }

@@ -46,7 +46,7 @@ public class User extends NamedEntity implements Serializable, HasIdAndEmail {
     @Temporal(TemporalType.TIMESTAMP)
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss", timezone = "Europe/Moscow")
-    private Date registered;
+    private Date registered=new Date();
 
     @Enumerated(EnumType.STRING)
     @CollectionTable(name = "user_role",

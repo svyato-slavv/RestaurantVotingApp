@@ -18,4 +18,7 @@ public class UsersUtil {
         user.setPassword(userTo.getPassword());
         return user;
     }
+    public UserTo getToWithRoles(User user){
+        return new UserTo(user.getId(), user.getName(), user.getEmail(), user.getRoles());
+    }
 }

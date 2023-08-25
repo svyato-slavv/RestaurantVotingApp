@@ -9,9 +9,12 @@ import ru.ivanov.restaurantvotingapplication.error.NotFoundException;
 import ru.ivanov.restaurantvotingapplication.model.Role;
 import ru.ivanov.restaurantvotingapplication.model.User;
 import ru.ivanov.restaurantvotingapplication.repository.UserRepository;
+import ru.ivanov.restaurantvotingapplication.to.UserTo;
+import ru.ivanov.restaurantvotingapplication.util.UsersUtil;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 import static ru.ivanov.restaurantvotingapplication.config.SecurityConfig.PASSWORD_ENCODER;
@@ -25,13 +28,18 @@ public class UserServiceImpl implements UserService {
     private final UserRepository repository;
 
     @Override
-    public List<User> getAll() {
-        return repository.findAll(Sort.by(Sort.Direction.ASC, "name", "email"));
+    public List<UserTo> getAll() {
+        return repository.findAll(Sort.by(Sort.Direction.ASC, "name", "email"))
+                .stream()
+                .map(UsersUtil::getToWithRoles)
+                .collect(Collectors.toList());
     }
+
 
     @Override
     public User get(int id) {
-        return repository.findById(id).orElseThrow(()->new NotFoundException("User with id = "+id+" not found"));
+        return repository.findById(id)
+                .orElseThrow(() -> new NotFoundException("User with id = " + id + " not found"));
     }
 
     @Transactional

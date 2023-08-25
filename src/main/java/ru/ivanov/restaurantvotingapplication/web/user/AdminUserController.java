@@ -2,7 +2,6 @@ package ru.ivanov.restaurantvotingapplication.web.user;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -37,8 +36,7 @@ public class AdminUserController {
 
 
     @GetMapping()
-
-    public List<User> getAll() {
+    public List<UserTo> getAll() {
         return service.getAll();
     }
 
@@ -59,9 +57,10 @@ public class AdminUserController {
 
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void update(@Valid @RequestBody User user, @PathVariable int id) {
-        assureIdConsistent(user, id);
-        service.prepareAndSave(user);
+    public void update(@Valid @RequestBody UserTo userTo, @PathVariable int id) {
+        assureIdConsistent(userTo, id);
+        User user=service.get(id);
+        service.prepareAndSave(UsersUtil.updateFromTo(user,userTo));
     }
 
     @DeleteMapping("/{id}")
