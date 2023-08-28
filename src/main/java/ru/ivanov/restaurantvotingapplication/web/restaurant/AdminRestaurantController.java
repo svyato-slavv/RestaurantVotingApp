@@ -1,6 +1,7 @@
 package ru.ivanov.restaurantvotingapplication.web.restaurant;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +21,7 @@ import java.util.List;
 import static ru.ivanov.restaurantvotingapplication.util.ValidationUtil.assureIdConsistent;
 import static ru.ivanov.restaurantvotingapplication.util.ValidationUtil.checkNew;
 
+@Slf4j
 @RestController
 @RequestMapping(value = AdminRestaurantController.REST_URL, produces = MediaType.APPLICATION_JSON_VALUE)
 @RequiredArgsConstructor
@@ -30,11 +32,13 @@ public class AdminRestaurantController extends AbstractRestaurantController {
 
     @GetMapping()
     public List<Restaurant> restaurantList() {
+        log.info("get all restaurants");
         return super.getAll();
     }
 
     @GetMapping("/{id}")
     public RestaurantTo getWithTodayMenu(@PathVariable int id) {
+        log.info("get restaurant with today menu with id={}", id);
         return super.getWithTodayMenu(id);
     }
 
@@ -42,14 +46,16 @@ public class AdminRestaurantController extends AbstractRestaurantController {
     public RestaurantTo getWithMenuByDate(
             @RequestParam @Nullable LocalDate date,
             @PathVariable int id) {
-        if (date==null){
+        log.info("get restaurant with menu by date={} with id={}",date, id);
+        if (date == null) {
             return super.getWithTodayMenu(id);
         }
-        return super.getWithMenuByDate(id,date);
+        return super.getWithMenuByDate(id, date);
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Restaurant> createWithLocation(@RequestBody Restaurant restaurant) {
+        log.info("create restaurant {}",restaurant);
         checkNew(restaurant);
         Restaurant created = super.create(restaurant);
         URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath()
@@ -62,6 +68,7 @@ public class AdminRestaurantController extends AbstractRestaurantController {
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void update(@RequestBody Restaurant restaurant, @PathVariable int id) {
+        log.info("update restaurant {} with id={}",restaurant,id);
         assureIdConsistent(restaurant, id);
         super.updateRestaurant(restaurant);
     }
@@ -69,6 +76,7 @@ public class AdminRestaurantController extends AbstractRestaurantController {
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable int id) {
+        log.info("delete restaurant with id={}",id);
         super.delete(id);
     }
 
@@ -80,6 +88,7 @@ public class AdminRestaurantController extends AbstractRestaurantController {
     @PostMapping(value = "/{id}/dishes", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void updateMenu(@RequestBody List<DishTo> newMenu, @PathVariable int id) {
+        log.info("set new menu {} in restaurant with id={}",newMenu,id);
         service.deleteOldTodayMenu(id);
         service.setNewMenu(newMenu, id);
     }

@@ -1,7 +1,8 @@
 package ru.ivanov.restaurantvotingapplication.web.user;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +21,7 @@ import java.net.URI;
 import static ru.ivanov.restaurantvotingapplication.util.ValidationUtil.assureIdConsistent;
 import static ru.ivanov.restaurantvotingapplication.util.ValidationUtil.checkNew;
 
+@Slf4j
 @RestController
 @RequestMapping(value = ProfileController.REST_URL, produces = MediaType.APPLICATION_JSON_VALUE)
 @RequiredArgsConstructor
@@ -36,18 +38,21 @@ public class ProfileController {
 
     @GetMapping()
     public User get(@AuthenticationPrincipal AuthUser authUser) {
+        log.info("get user with id= {}", authUser.id());
         return authUser.getUser();
     }
 
     @DeleteMapping()
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@AuthenticationPrincipal AuthUser authUser) {
+        log.info("delete user with id= {}", authUser.id());
         service.delete(authUser.id());
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<User> register(@RequestBody UserTo userTo) {
+    public ResponseEntity<User> register(@Valid @RequestBody UserTo userTo) {
+        log.info("user registration from to= {}", userTo);
         checkNew(userTo);
         User created = service.prepareAndSave(UsersUtil.createNewFromTo(userTo));
         URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath()
@@ -57,7 +62,8 @@ public class ProfileController {
 
     @PutMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void update(@RequestBody UserTo userTo, @AuthenticationPrincipal AuthUser authUser) {
+    public void update(@Valid@RequestBody UserTo userTo, @AuthenticationPrincipal AuthUser authUser) {
+        log.info("update user with id= {} from userTo= {}", authUser.id(), userTo);
         assureIdConsistent(userTo, authUser.id());
         User user = authUser.getUser();
         service.prepareAndSave(UsersUtil.updateFromTo(user, userTo));

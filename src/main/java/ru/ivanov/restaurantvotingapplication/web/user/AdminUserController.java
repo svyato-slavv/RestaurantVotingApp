@@ -2,6 +2,7 @@ package ru.ivanov.restaurantvotingapplication.web.user;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -19,6 +20,7 @@ import java.util.List;
 import static ru.ivanov.restaurantvotingapplication.util.ValidationUtil.assureIdConsistent;
 import static ru.ivanov.restaurantvotingapplication.util.ValidationUtil.checkNew;
 
+@Slf4j
 @RestController
 @RequestMapping(value = AdminUserController.REST_URL, produces = MediaType.APPLICATION_JSON_VALUE)
 @RequiredArgsConstructor
@@ -37,16 +39,19 @@ public class AdminUserController {
 
     @GetMapping()
     public List<UserTo> getAll() {
+        log.info("get all users with roles");
         return service.getAll();
     }
 
     @GetMapping("/{id}")
     public User get(@PathVariable int id) {
+        log.info("get user with id= {}", id);
         return service.get(id);
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<User> createWithLocation(@Valid @RequestBody User user) {
+        log.info("create user= {}", user);
         checkNew(user);
         User created = service.prepareAndSave(user);
         URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath()
@@ -58,14 +63,16 @@ public class AdminUserController {
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void update(@Valid @RequestBody UserTo userTo, @PathVariable int id) {
+        log.info("update user with id= {} from userTo= {}", id, userTo);
         assureIdConsistent(userTo, id);
-        User user=service.get(id);
-        service.prepareAndSave(UsersUtil.updateFromTo(user,userTo));
+        User user = service.get(id);
+        service.prepareAndSave(UsersUtil.updateFromTo(user, userTo));
     }
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable int id) {
+        log.info("delete user with id= {}", id);
         service.delete(id);
     }
 

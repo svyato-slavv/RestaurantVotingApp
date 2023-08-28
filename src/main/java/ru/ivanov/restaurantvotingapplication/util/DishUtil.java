@@ -14,9 +14,6 @@ public class DishUtil {
         return new DishTo(dish.getName(), dish.getPrice());
     }
 
-    public static List<Dish> menuFromTos(List<DishTo> dishToList) {
-        return dishToList.stream().map(DishUtil::getDishFromTo).toList();
-    }
 
     public static DishTo getToWithRestaurant(Dish dish) {
         return new DishTo(dish.getName(), dish.getPrice(), dish.getRestaurant());

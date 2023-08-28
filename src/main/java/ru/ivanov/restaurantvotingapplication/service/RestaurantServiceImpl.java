@@ -3,6 +3,8 @@ package ru.ivanov.restaurantvotingapplication.service;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.time.DateUtils;
 import org.hibernate.Hibernate;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
@@ -31,6 +33,7 @@ public class RestaurantServiceImpl implements RestaurantService {
     private final RestaurantRepository restaurantRepository;
     private final DishRepository dishRepository;
 
+    @Cacheable(value = "restaurants")
     @Override
     public List<Restaurant> restaurantList() {
         List<Restaurant> allRestaurants = restaurantRepository.findAll();
@@ -45,12 +48,14 @@ public class RestaurantServiceImpl implements RestaurantService {
         return restaurant;
     }
 
+    @CacheEvict(value = "restaurants", allEntries = true)
     @Transactional
     @Override
     public Restaurant create(Restaurant restaurant) {
         return restaurantRepository.save(restaurant);
     }
 
+    @CacheEvict(value = "restaurants", allEntries = true)
     @Transactional
     @Override
     public void update(Restaurant restaurant) {
@@ -58,6 +63,7 @@ public class RestaurantServiceImpl implements RestaurantService {
         checkNotFoundWithId(restaurantRepository.save(restaurant), restaurant.id());
     }
 
+    @CacheEvict(value = "restaurants", allEntries = true)
     @Transactional
     @Override
     public void delete(int id) {

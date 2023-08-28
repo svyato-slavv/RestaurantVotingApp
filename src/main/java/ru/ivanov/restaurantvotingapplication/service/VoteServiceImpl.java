@@ -2,6 +2,7 @@ package ru.ivanov.restaurantvotingapplication.service;
 
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.time.DateUtils;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.ivanov.restaurantvotingapplication.error.VoteException;
@@ -26,6 +27,7 @@ public class VoteServiceImpl implements VoteService {
 
     @Transactional
     @Override
+    @CacheEvict(value = "restaurants", allEntries = true)
     public void vote(Restaurant restaurant, User user) {
         Optional<Vote> voteOfDay = repository.findAllByUser_Id(Objects.requireNonNull(user.getId()))
                 .stream()
@@ -34,7 +36,6 @@ public class VoteServiceImpl implements VoteService {
             Instant instant = CHANGE_MIND.atDate(LocalDate.now()).
                     atZone(ZoneId.systemDefault()).toInstant();
             Date changeMind = Date.from(instant);
-            Date date=Date.from(CHANGE_MIND.atDate(LocalDate.now()).atZone(ZoneId.systemDefault()).toInstant());
 
             if (voteOfDay.get().getVoteDate().before(changeMind)) {
                 repository.updateVote(restaurant.getId(), new Date(), voteOfDay.get().getId());

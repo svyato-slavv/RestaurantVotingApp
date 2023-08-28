@@ -1,6 +1,8 @@
 package ru.ivanov.restaurantvotingapplication.to;
 
-import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.*;
 import ru.ivanov.restaurantvotingapplication.model.Restaurant;
 
@@ -9,10 +11,11 @@ import java.util.Date;
 @Data
 @EqualsAndHashCode(callSuper = true)
 public class DishTo extends BaseTo {
-
+    @NotBlank
+    @Size(min = 2, max = 128)
     String name;
     Date date;
-
+    @NotNull
     Integer price;
     Restaurant restaurant;
 

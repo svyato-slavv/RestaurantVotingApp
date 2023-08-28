@@ -1,6 +1,8 @@
 package ru.ivanov.restaurantvotingapplication.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,6 +29,7 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository repository;
 
+    @Cacheable("users")
     @Override
     public List<UserTo> getAll() {
         return repository.findAll(Sort.by(Sort.Direction.ASC, "name", "email"))
@@ -35,13 +38,13 @@ public class UserServiceImpl implements UserService {
                 .collect(Collectors.toList());
     }
 
-
     @Override
     public User get(int id) {
         return repository.findById(id)
                 .orElseThrow(() -> new NotFoundException("User with id = " + id + " not found"));
     }
 
+    @CacheEvict(value = "users", allEntries = true)
     @Transactional
     @Override
     public User create(User user) {
@@ -49,13 +52,14 @@ public class UserServiceImpl implements UserService {
         return repository.save(user);
     }
 
+    @CacheEvict(value = "users", allEntries = true)
     @Transactional
     @Override
     public void update(User user) {
         Assert.notNull(user, "user must not be null");
         checkNotFoundWithId(repository.save(user), user.id());
     }
-
+    @CacheEvict(value = "users", allEntries = true)
     @Transactional
     @Override
     public User prepareAndSave(User user) {
@@ -64,7 +68,7 @@ public class UserServiceImpl implements UserService {
         user.setRoles(Collections.singletonList(Role.USER));
         return repository.save(user);
     }
-
+    @CacheEvict(value = "users", allEntries = true)
     @Transactional
     @Override
     public void delete(int id) {

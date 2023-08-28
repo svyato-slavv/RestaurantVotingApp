@@ -1,6 +1,10 @@
 package ru.ivanov.restaurantvotingapplication.service;
 
 import lombok.RequiredArgsConstructor;
+import org.hibernate.annotations.Cache;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
@@ -22,30 +26,34 @@ public class DishServiceImpl implements DishService {
     private final DishRepository dishRepository;
 
 
-
+    @Cacheable(value = "dishes")
     @Override
     public List<Dish> getSorted() {
         return dishRepository.findSortedList();
     }
 
+
     @Override
     public Dish get(int id) {
-        return dishRepository.findOneWithJoinFetch(id).orElseThrow(()->new NotFoundException("Dish with id = "+id+" not found"));
+        return dishRepository.findOneWithJoinFetch(id).orElseThrow(() -> new NotFoundException("Dish with id = " + id + " not found"));
     }
 
 
+    @CacheEvict(value = "dishes", allEntries = true)
     @Override
     @Transactional
     public Dish create(Dish dish) {
         return dishRepository.save(dish);
     }
 
+    @CacheEvict(value = "dishes", allEntries = true)
     @Override
     @Transactional
     public void delete(int id) {
         dishRepository.deleteById(id);
     }
 
+    @CacheEvict(value = "dishes", allEntries = true)
     @Override
     @Transactional
     public void update(Dish dish, DishTo dishTo) {
