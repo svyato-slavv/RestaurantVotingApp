@@ -44,7 +44,7 @@ public class RestaurantServiceImpl implements RestaurantService {
     @Override
     public Restaurant get(int id) {
         Restaurant restaurant = restaurantRepository.findById(id).orElseThrow(() -> new NotFoundException("Restaurant with id = " + id + " not found"));
-        Hibernate.initialize(restaurant.getVotes());
+        Hibernate.initialize(restaurant.getVoteCount(null));
         return restaurant;
     }
 

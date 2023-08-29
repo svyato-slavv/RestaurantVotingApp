@@ -20,7 +20,7 @@ import java.util.List;
 @RequestMapping(value = UserRestaurantController.REST_URL, produces = MediaType.APPLICATION_JSON_VALUE)
 @RequiredArgsConstructor
 public class UserRestaurantController extends AbstractRestaurantController {
-    static final String REST_URL = "/user/restaurants";
+    static final String REST_URL = "/api/user/restaurants";
 
     private final RestaurantService restaurantService;
     private final VoteService voteService;

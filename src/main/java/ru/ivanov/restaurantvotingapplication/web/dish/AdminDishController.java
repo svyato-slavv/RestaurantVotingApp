@@ -25,7 +25,7 @@ import static ru.ivanov.restaurantvotingapplication.util.ValidationUtil.checkNew
 @RequestMapping(value = AdminDishController.REST_URL, produces = MediaType.APPLICATION_JSON_VALUE)
 @RequiredArgsConstructor
 public class AdminDishController {
-    static final String REST_URL = "/admin/dishes";
+    static final String REST_URL = "/api/admin/dishes";
     private final DishService service;
     private final DishRepository repository;
 

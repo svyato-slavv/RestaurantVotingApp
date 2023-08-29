@@ -1,5 +1,6 @@
 package ru.ivanov.restaurantvotingapplication.to;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
@@ -22,7 +23,9 @@ public class UserTo extends NamedTo implements HasIdAndEmail {
 
     @NotBlank
     @Size(min = 5, max = 32)
+    @Schema(accessMode = Schema.AccessMode.WRITE_ONLY)
     String password;
+    @Schema(accessMode = Schema.AccessMode.READ_ONLY)
     Set<Role> roles;
 
     public UserTo(Integer id, String name, String email, String password) {
@@ -30,10 +33,11 @@ public class UserTo extends NamedTo implements HasIdAndEmail {
         this.email = email;
         this.password = password;
     }
-    public UserTo(Integer id, String name, String email,Set<Role> roles){
+
+    public UserTo(Integer id, String name, String email, Set<Role> roles) {
         super(id, name);
         this.email = email;
-        this.roles=roles;
+        this.roles = roles;
     }
 
 

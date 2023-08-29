@@ -24,6 +24,10 @@ public abstract class AbstractRestaurantController {
         return service.restaurantList();
     }
 
+    public Restaurant findOne(Integer id){
+        return service.get(id);
+    }
+
     public RestaurantTo getWithTodayMenu(int id) {
         Restaurant restaurant=service.get(id);
         return RestaurantUtil.getTo(restaurant, service.showTodayMenu(id), restaurant.getVoteCount(null));

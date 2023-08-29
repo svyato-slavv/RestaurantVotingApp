@@ -25,7 +25,7 @@ import static ru.ivanov.restaurantvotingapplication.util.ValidationUtil.checkNew
 @RequestMapping(value = AdminUserController.REST_URL, produces = MediaType.APPLICATION_JSON_VALUE)
 @RequiredArgsConstructor
 public class AdminUserController {
-    static final String REST_URL = "/admin/users";
+    static final String REST_URL = "/api/admin/users";
 
     private final UserService service;
 

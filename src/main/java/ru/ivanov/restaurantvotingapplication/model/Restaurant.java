@@ -2,6 +2,7 @@ package ru.ivanov.restaurantvotingapplication.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -22,6 +23,7 @@ import java.util.List;
 @AllArgsConstructor
 public class Restaurant extends NamedEntity {
     @Transient
+    @Schema(accessMode = Schema.AccessMode.READ_ONLY)
     private Integer voteCount;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "restaurant")

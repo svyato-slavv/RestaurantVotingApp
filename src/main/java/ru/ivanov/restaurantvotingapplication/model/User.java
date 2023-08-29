@@ -3,6 +3,7 @@ package ru.ivanov.restaurantvotingapplication.model;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -56,7 +57,8 @@ public class User extends NamedEntity implements Serializable, HasIdAndEmail {
     @ElementCollection(fetch = FetchType.EAGER)
     @JoinColumn
     @OnDelete(action = OnDeleteAction.CASCADE)
-    @JsonIgnore
+//    @JsonIgnore
+    @Schema(accessMode = Schema.AccessMode.READ_ONLY)
     private Set<Role> roles;
 
     @OneToMany(fetch = FetchType.LAZY,mappedBy = "user")

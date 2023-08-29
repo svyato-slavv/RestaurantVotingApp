@@ -26,7 +26,7 @@ import static ru.ivanov.restaurantvotingapplication.util.ValidationUtil.checkNew
 @RequestMapping(value = ProfileController.REST_URL, produces = MediaType.APPLICATION_JSON_VALUE)
 @RequiredArgsConstructor
 public class ProfileController {
-    static final String REST_URL = "/profile";
+    static final String REST_URL = "/api/profile";
     private final UserService service;
 
     private final UniqueMailValidator emailValidator;
