@@ -45,4 +45,5 @@ server.servlet:
     enabled: true
     force: true
 
-  #springdoc.swagger-ui.path:
+
+springdoc.swagger-ui.path: /
