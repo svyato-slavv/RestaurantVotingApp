@@ -8,6 +8,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.Cascade;
 
 import java.util.Date;
 
@@ -30,9 +31,9 @@ public class Dish extends NamedEntity {
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Europe/Moscow")
     private Date date;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "restaurant_id",nullable = false)
-    @JsonBackReference
+    @JsonManagedReference
     private Restaurant restaurant;
     public Dish(Integer id, String name, Integer price) {
         super(id, name);
@@ -44,7 +45,7 @@ public class Dish extends NamedEntity {
         this.price = price;
         this.date = date;
     }
-    public Dish(Integer id,String name,int price,Restaurant restaurant){
+    public Dish(Integer id,String name,Integer price,Restaurant restaurant){
         super(id,name);
         this.price=price;
         this.date=new Date();

@@ -4,7 +4,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import ru.ivanov.restaurantvotingapplication.model.Dish;
 import ru.ivanov.restaurantvotingapplication.model.Restaurant;
 import ru.ivanov.restaurantvotingapplication.service.RestaurantService;
+import ru.ivanov.restaurantvotingapplication.to.DishTo;
 import ru.ivanov.restaurantvotingapplication.to.RestaurantTo;
+import ru.ivanov.restaurantvotingapplication.util.DishUtil;
 import ru.ivanov.restaurantvotingapplication.util.RestaurantUtil;
 
 import java.time.LocalDate;

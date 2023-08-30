@@ -2,13 +2,17 @@ package ru.ivanov.restaurantvotingapplication.web.dish;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.hibernate.Hibernate;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+import ru.ivanov.restaurantvotingapplication.error.NotFoundException;
 import ru.ivanov.restaurantvotingapplication.model.Dish;
+import ru.ivanov.restaurantvotingapplication.model.Restaurant;
 import ru.ivanov.restaurantvotingapplication.repository.DishRepository;
+import ru.ivanov.restaurantvotingapplication.repository.RestaurantRepository;
 import ru.ivanov.restaurantvotingapplication.service.DishService;
 import ru.ivanov.restaurantvotingapplication.to.DishTo;
 import ru.ivanov.restaurantvotingapplication.util.DishUtil;
@@ -29,26 +33,29 @@ public class AdminDishController {
     private final DishService service;
     private final DishRepository repository;
 
+    private final RestaurantRepository restaurantRepository;
+
     @GetMapping()
     public List<DishTo> getAllWithRestaurant() {
         log.info("get dishes with their restaurants");
         return service.getSorted()
                 .stream()
-                .map(DishUtil::getToWithRestaurant)
+                .map(DishUtil::getTo)
                 .toList();
     }
 
     @GetMapping("/{id}")
-    public DishTo get(@PathVariable int id) {
-        log.info("get dish with id= {}",id);
-        return DishUtil.getToWithRestaurant(service.get(id));
+    public Dish get(@PathVariable int id) {
+        log.info("get dish with id= {}", id);
+        return service.get(id);
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Dish> createWithLocation(@RequestBody DishTo dishTo) {
-        log.info("create new dish from dishTo= {}",dishTo);
+        log.info("create new dish from dishTo= {}", dishTo);
         checkNew(dishTo);
-        Dish created = service.create(DishUtil.createNewFromTo(dishTo));
+        Restaurant restaurant = restaurantRepository.findById(dishTo.getRestaurantId()).orElseThrow(() -> new NotFoundException("Restaurant not found"));
+        Dish created = service.create(DishUtil.createNewFromTo(dishTo, restaurant));
         URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath()
                 .path(REST_URL + "/{id}")
                 .buildAndExpand(created.getId()).toUri();
@@ -58,17 +65,18 @@ public class AdminDishController {
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void update(@RequestBody DishTo dishTo, @PathVariable int id) {
-        log.info("update dish with id= {} from dishTo= {}",id,dishTo);
+        log.info("update dish with id= {} from dishTo= {}", id, dishTo);
+        Restaurant restaurant = restaurantRepository.findById(dishTo.getRestaurantId()).orElseThrow(() -> new NotFoundException("Restaurant not found"));
         Dish dish = repository.findById(id).orElseThrow();
         assureIdConsistent(dishTo, id);
-        service.update(dish, dishTo);
+        service.update(dish, dishTo, restaurant);
     }
 
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable int id) {
-        log.info("delete dish with id= {}",id);
+        log.info("delete dish with id= {}", id);
         service.delete(id);
     }
 }

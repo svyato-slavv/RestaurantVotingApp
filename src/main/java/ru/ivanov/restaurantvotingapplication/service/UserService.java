@@ -1,7 +1,6 @@
 package ru.ivanov.restaurantvotingapplication.service;
 
 import ru.ivanov.restaurantvotingapplication.model.User;
-import ru.ivanov.restaurantvotingapplication.to.UserTo;
 
 import java.util.List;
 
@@ -12,9 +11,10 @@ public interface UserService {
 
     void delete(int id);
 
-    List<UserTo> getAll();
+    List<User> getAll();
 
     void update(User user);
+
     User prepareAndSave(User user);
 
 }

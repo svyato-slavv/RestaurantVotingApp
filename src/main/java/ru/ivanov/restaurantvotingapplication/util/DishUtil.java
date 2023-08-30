@@ -3,9 +3,10 @@ package ru.ivanov.restaurantvotingapplication.util;
 
 import lombok.experimental.UtilityClass;
 import ru.ivanov.restaurantvotingapplication.model.Dish;
+import ru.ivanov.restaurantvotingapplication.model.Restaurant;
 import ru.ivanov.restaurantvotingapplication.to.DishTo;
 
-import java.util.List;
+import java.util.Date;
 
 @UtilityClass
 public class DishUtil {
@@ -15,23 +16,19 @@ public class DishUtil {
     }
 
 
-    public static DishTo getToWithRestaurant(Dish dish) {
-        return new DishTo(dish.id(), dish.getName(), dish.getPrice(), dish.getRestaurant());
+    public static Dish createNewFromTo(DishTo dishTo, Restaurant restaurant) {
+        return new Dish(null, dishTo.getName(), dishTo.getPrice(), restaurant);
     }
 
-    public static Dish createNewFromTo(DishTo dishTo) {
-        return new Dish(null, dishTo.getName(), dishTo.getPrice(), dishTo.getRestaurant());
-    }
-
-    public static Dish updateFromTo(Dish dish, DishTo dishTo) {
+    public static Dish updateFromTo(Dish dish, DishTo dishTo, Restaurant restaurant) {
         dish.setName(dishTo.getName());
         dish.setPrice(dishTo.getPrice());
-        dish.setRestaurant(dishTo.getRestaurant());
+        dish.setRestaurant(restaurant);
         return dish;
     }
 
     public static Dish getDishFromTo(DishTo dishTo) {
-        return new Dish(dishTo.getId(), dishTo.getName(), dishTo.getPrice(), dishTo.getRestaurant());
+        return new Dish(dishTo.getId(), dishTo.getName(), dishTo.getPrice(), new Date());
     }
 
 }

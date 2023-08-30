@@ -1,6 +1,7 @@
 package ru.ivanov.restaurantvotingapplication.service;
 
 import lombok.RequiredArgsConstructor;
+import org.hibernate.Hibernate;
 import org.hibernate.annotations.Cache;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
@@ -10,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 import ru.ivanov.restaurantvotingapplication.error.NotFoundException;
 import ru.ivanov.restaurantvotingapplication.model.Dish;
+import ru.ivanov.restaurantvotingapplication.model.Restaurant;
 import ru.ivanov.restaurantvotingapplication.repository.DishRepository;
 import ru.ivanov.restaurantvotingapplication.to.DishTo;
 import ru.ivanov.restaurantvotingapplication.util.DishUtil;
@@ -35,7 +37,9 @@ public class DishServiceImpl implements DishService {
 
     @Override
     public Dish get(int id) {
-        return dishRepository.findOneWithJoinFetch(id).orElseThrow(() -> new NotFoundException("Dish with id = " + id + " not found"));
+        Dish dish = dishRepository.findById(id).orElseThrow(() -> new NotFoundException("Dish with id = " + id + " not found"));
+        Hibernate.initialize(dish.getRestaurant().getVoteCount(null));
+        return dish;
     }
 
 
@@ -56,9 +60,9 @@ public class DishServiceImpl implements DishService {
     @CacheEvict(value = "dishes", allEntries = true)
     @Override
     @Transactional
-    public void update(Dish dish, DishTo dishTo) {
+    public void update(Dish dish, DishTo dishTo, Restaurant restaurant) {
         Assert.notNull(dishTo, "dish must not be null");
-        checkNotFoundWithId(dishRepository.save(DishUtil.updateFromTo(dish, dishTo)), dishTo.id());
+        checkNotFoundWithId(dishRepository.save(DishUtil.updateFromTo(dish, dishTo, restaurant)), dishTo.id());
     }
 
 }

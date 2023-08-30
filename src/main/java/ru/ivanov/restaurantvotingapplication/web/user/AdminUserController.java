@@ -38,7 +38,7 @@ public class AdminUserController {
 
 
     @GetMapping()
-    public List<UserTo> getAll() {
+    public List<User> getAll() {
         log.info("get all users with roles");
         return service.getAll();
     }

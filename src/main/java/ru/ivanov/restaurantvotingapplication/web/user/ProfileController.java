@@ -37,9 +37,9 @@ public class ProfileController {
     }
 
     @GetMapping()
-    public User get(@AuthenticationPrincipal AuthUser authUser) {
+    public UserTo get(@AuthenticationPrincipal AuthUser authUser) {
         log.info("get user with id= {}", authUser.id());
-        return authUser.getUser();
+        return UsersUtil.getTo(authUser.getUser());
     }
 
     @DeleteMapping()
@@ -62,7 +62,7 @@ public class ProfileController {
 
     @PutMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void update(@Valid@RequestBody UserTo userTo, @AuthenticationPrincipal AuthUser authUser) {
+    public void update(@Valid @RequestBody UserTo userTo, @AuthenticationPrincipal AuthUser authUser) {
         log.info("update user with id= {} from userTo= {}", authUser.id(), userTo);
         assureIdConsistent(userTo, authUser.id());
         User user = authUser.getUser();

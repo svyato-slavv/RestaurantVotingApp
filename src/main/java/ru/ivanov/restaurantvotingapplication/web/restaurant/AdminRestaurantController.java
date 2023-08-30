@@ -15,6 +15,7 @@ import ru.ivanov.restaurantvotingapplication.model.Restaurant;
 import ru.ivanov.restaurantvotingapplication.service.RestaurantService;
 import ru.ivanov.restaurantvotingapplication.to.DishTo;
 import ru.ivanov.restaurantvotingapplication.to.RestaurantTo;
+import ru.ivanov.restaurantvotingapplication.util.DishUtil;
 
 import java.net.URI;
 import java.time.LocalDate;
@@ -88,8 +89,8 @@ public class AdminRestaurantController extends AbstractRestaurantController {
     }
 
     @GetMapping("/{id}/dishes")
-    public List<Dish> todayMenuOfRestaurant(@PathVariable int id) {
-        return super.todayMenu(id);
+    public List<DishTo> todayMenuOfRestaurant(@PathVariable int id) {
+        return super.todayMenu(id).stream().map(DishUtil::getTo).toList();
     }
 
     @PostMapping(value = "/{id}/dishes", consumes = MediaType.APPLICATION_JSON_VALUE)

@@ -1,7 +1,7 @@
 package ru.ivanov.restaurantvotingapplication.model;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -20,12 +20,12 @@ import java.util.Date;
 public class Vote extends BaseEntity {
     @Column(name = "vote_date", nullable = false, columnDefinition = "timestamp default now()")
     @Temporal(TemporalType.TIMESTAMP)
-    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss", timezone = "Europe/Moscow")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Europe/Moscow")
     private Date voteDate = new Date();
     @ManyToOne
     @NotNull
     @JoinColumn(name = "restaurant_id")
-    @JsonBackReference
+    @JsonManagedReference
     private Restaurant restaurant;
     @ManyToOne
     @NotNull

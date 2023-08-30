@@ -11,12 +11,10 @@ import ru.ivanov.restaurantvotingapplication.error.NotFoundException;
 import ru.ivanov.restaurantvotingapplication.model.Role;
 import ru.ivanov.restaurantvotingapplication.model.User;
 import ru.ivanov.restaurantvotingapplication.repository.UserRepository;
-import ru.ivanov.restaurantvotingapplication.to.UserTo;
-import ru.ivanov.restaurantvotingapplication.util.UsersUtil;
+
 
 import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
 
 import static ru.ivanov.restaurantvotingapplication.config.SecurityConfig.PASSWORD_ENCODER;
@@ -31,11 +29,8 @@ public class UserServiceImpl implements UserService {
 
     @Cacheable("users")
     @Override
-    public List<UserTo> getAll() {
-        return repository.findAll(Sort.by(Sort.Direction.ASC, "name", "email"))
-                .stream()
-                .map(UsersUtil::getToWithRoles)
-                .collect(Collectors.toList());
+    public List<User> getAll() {
+        return repository.findAll(Sort.by(Sort.Direction.ASC, "name", "email"));
     }
 
     @Override
@@ -59,6 +54,7 @@ public class UserServiceImpl implements UserService {
         Assert.notNull(user, "user must not be null");
         checkNotFoundWithId(repository.save(user), user.id());
     }
+
     @CacheEvict(value = "users", allEntries = true)
     @Transactional
     @Override
@@ -68,6 +64,7 @@ public class UserServiceImpl implements UserService {
         user.setRoles(Collections.singletonList(Role.USER));
         return repository.save(user);
     }
+
     @CacheEvict(value = "users", allEntries = true)
     @Transactional
     @Override

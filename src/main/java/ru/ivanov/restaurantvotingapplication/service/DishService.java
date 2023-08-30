@@ -1,6 +1,7 @@
 package ru.ivanov.restaurantvotingapplication.service;
 
 import ru.ivanov.restaurantvotingapplication.model.Dish;
+import ru.ivanov.restaurantvotingapplication.model.Restaurant;
 import ru.ivanov.restaurantvotingapplication.to.DishTo;
 
 import java.util.List;
@@ -16,6 +17,6 @@ public interface DishService {
 
     void delete(int id);
 
-    void update(Dish dish, DishTo dishTo);
+    void update(Dish dish, DishTo dishTo, Restaurant restaurant);
 
 }

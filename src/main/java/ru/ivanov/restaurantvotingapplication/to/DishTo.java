@@ -1,6 +1,7 @@
 package ru.ivanov.restaurantvotingapplication.to;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -19,24 +20,18 @@ public class DishTo extends BaseTo {
     Date date;
     @NotNull
     Integer price;
+    @Schema(accessMode = Schema.AccessMode.WRITE_ONLY)
+    Integer restaurantId;
 
-    @Schema(hidden = true)
-    Restaurant restaurant;
 
     public DishTo() {
 
     }
 
-    public DishTo(Integer id,String name, Integer price) {
+    public DishTo(Integer id, String name, Integer price) {
         super(id);
         this.name = name;
         this.price = price;
     }
 
-    public DishTo(Integer id,String name, Integer price, Restaurant restaurant) {
-        super(id);
-        this.name = name;
-        this.price = price;
-        this.restaurant = restaurant;
-    }
 }
