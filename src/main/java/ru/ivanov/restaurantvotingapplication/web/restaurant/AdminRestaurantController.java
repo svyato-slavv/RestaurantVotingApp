@@ -44,9 +44,20 @@ public class AdminRestaurantController extends AbstractRestaurantController {
 //        return super.getWithTodayMenu(id);
 //    }
     @GetMapping("/{id}")
-    public Restaurant getRestaurant(@PathVariable int id) {
+    public RestaurantTo getRestaurant(@PathVariable int id) {
         log.info("get restaurant with today menu with id={}", id);
-        return super.findOne(id);
+        return super.getWithTodayMenu(id);
+    }
+
+    @GetMapping("/{id}/filter")
+    public RestaurantTo getWithMenuByDate(
+            @RequestParam @Nullable LocalDate date,
+            @PathVariable int id) {
+        log.info("get restaurant with menu by date={} with id={}", date, id);
+        if (date == null) {
+            return super.getWithTodayMenu(id);
+        }
+        return super.getWithMenuByDate(id, date);
     }
 
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
@@ -87,17 +98,6 @@ public class AdminRestaurantController extends AbstractRestaurantController {
         log.info("set new menu {} in restaurant with id={}", newMenu, id);
         service.deleteOldTodayMenu(id);
         service.setNewMenu(newMenu, id);
-    }
-
-    @GetMapping("/{id}/dishes/filter")
-    public RestaurantTo getWithMenuByDate(
-            @RequestParam @Nullable LocalDate date,
-            @PathVariable int id) {
-        log.info("get restaurant with menu by date={} with id={}", date, id);
-        if (date == null) {
-            return super.getWithTodayMenu(id);
-        }
-        return super.getWithMenuByDate(id, date);
     }
 
 }
