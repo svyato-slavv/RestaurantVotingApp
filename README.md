@@ -2,7 +2,6 @@
 **Design and implement a REST API using Spring-Boot/Spring Data JPA without frontend.**
 
 The task is:
-
 Build a voting system for deciding where to have lunch.
 
 --2 types of users: admin and regular users
