@@ -44,16 +44,16 @@ public class AdminDishController {
     @GetMapping()
     public List<DishTo> getAllByDate(@RequestParam LocalDate localDate) {
         log.info("get dishes by date = {}", localDate);
-        return service.getSorted()
+        return service.getByDate(localDate)
                 .stream()
                 .map(DishUtil::getTo)
                 .toList();
     }
 
     @GetMapping("/{id}")
-    public Dish get(@PathVariable int id) {
+    public DishTo get(@PathVariable int id) {
         log.info("get dish with id= {}", id);
-        return service.get(id);
+        return DishUtil.getTo(service.get(id));
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)

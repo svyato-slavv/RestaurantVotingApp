@@ -13,12 +13,12 @@ import java.time.LocalDate;
 public class DishUtil {
 
     public static DishTo getTo(Dish dish) {
-        return new DishTo(dish.id(), dish.getName(), dish.getPrice(),dish.getDate());
+        return new DishTo(dish.id(), dish.getName(), dish.getPrice(), dish.getDate(),dish.getRestaurant().getId());
     }
 
 
     public static Dish createNewFromTo(DishTo dishTo, Restaurant restaurant) {
-        return new Dish(null, dishTo.getName(), dishTo.getPrice(), restaurant);
+        return new Dish(null, dishTo.getName(), dishTo.getPrice(), restaurant, dishTo.getDate());
     }
 
     public static Dish updateFromTo(Dish dish, DishTo dishTo, Restaurant restaurant) {

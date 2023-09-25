@@ -1,7 +1,5 @@
 package ru.ivanov.restaurantvotingapplication.web.restaurant;
 
-import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.media.ExampleObject;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -10,11 +8,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.lang.Nullable;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-import ru.ivanov.restaurantvotingapplication.model.Dish;
 import ru.ivanov.restaurantvotingapplication.model.Restaurant;
+import ru.ivanov.restaurantvotingapplication.service.DishService;
 import ru.ivanov.restaurantvotingapplication.service.RestaurantService;
 import ru.ivanov.restaurantvotingapplication.to.DishTo;
-import ru.ivanov.restaurantvotingapplication.to.RestaurantTo;
 import ru.ivanov.restaurantvotingapplication.util.DishUtil;
 
 import java.net.URI;
@@ -30,7 +27,7 @@ import static ru.ivanov.restaurantvotingapplication.util.ValidationUtil.checkNew
 @RequiredArgsConstructor
 public class AdminRestaurantController extends AbstractRestaurantController {
     static final String REST_URL = "/api/admin/restaurants";
-    private final RestaurantService service;
+    private final DishService dishService;
 
 
     @GetMapping()
@@ -79,15 +76,6 @@ public class AdminRestaurantController extends AbstractRestaurantController {
         if (date == null) {
             return super.todayMenu(id).stream().map(DishUtil::getTo).toList();
         }
-        return service.showMenuByDate(id, date).stream().map(DishUtil::getTo).toList();
+        return dishService.getByDateAndRestaurant(id,date).stream().map(DishUtil::getTo).toList();
     }
-
-//    @PostMapping(value = "/{id}/dishes", consumes = MediaType.APPLICATION_JSON_VALUE)
-//    @ResponseStatus(HttpStatus.NO_CONTENT)
-//    public void updateMenu(@RequestBody List<DishTo> newMenu, @PathVariable int id) {
-//        log.info("set new menu {} in restaurant with id={}", newMenu, id);
-//        service.deleteOldTodayMenu(id);
-//        service.setNewMenu(newMenu, id);
-//    }
-
 }

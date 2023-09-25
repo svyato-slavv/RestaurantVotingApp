@@ -1,7 +1,6 @@
 package ru.ivanov.restaurantvotingapplication.service;
 
 import lombok.RequiredArgsConstructor;
-import org.apache.commons.lang3.time.DateUtils;
 import org.hibernate.Hibernate;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
@@ -70,36 +69,4 @@ public class RestaurantServiceImpl implements RestaurantService {
         restaurantRepository.deleteById(id);
     }
 
-    @Transactional
-    @Override
-    public void deleteOldTodayMenu(int restaurantId) {
-        List<Dish> oldTodayMenu = showTodayMenu(restaurantId);
-        dishRepository.deleteAll(oldTodayMenu);
-    }
-
-    @Override
-    public List<Dish> showTodayMenu(int id) {
-        return dishRepository.findAllByRestaurantId(id)
-                .stream()
-                .filter(dish -> dish.getDate().isEqual(LocalDate.now()))
-                .collect(Collectors.toList());
-    }
-
-    @Override
-    public List<Dish> showMenuByDate(int id, LocalDate localDate) {
-        Date date = Date.from(localDate.atStartOfDay().atZone(ZoneId.systemDefault()).toInstant());
-        return dishRepository.findAllByRestaurantId(id)
-                .stream()
-                .filter(dish -> dish.getDate().isEqual(localDate))
-                .collect(Collectors.toList());
-    }
-
-
-    @Transactional
-    @Override
-    public void setNewMenu(List<DishTo> newMenuTo, int restaurantId) {
-        List<Dish> newTodayMenu = newMenuTo.stream().map(DishUtil::getDishFromTo).toList();
-        newTodayMenu.forEach(dish -> dish.setRestaurant(get(restaurantId)));
-        dishRepository.saveAll(newTodayMenu);
-    }
 }

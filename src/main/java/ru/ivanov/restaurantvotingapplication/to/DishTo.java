@@ -17,11 +17,10 @@ public class DishTo extends BaseTo {
     @NotBlank
     @Size(min = 2, max = 128)
     String name;
-//    @Schema(hidden = true)
     LocalDate date;
     @NotNull
     Integer price;
-    @Schema(accessMode = Schema.AccessMode.WRITE_ONLY)
+//    @Schema(accessMode = Schema.AccessMode.WRITE_ONLY)
     Integer restaurantId;
 
 
@@ -29,11 +28,12 @@ public class DishTo extends BaseTo {
 
     }
 
-    public DishTo(Integer id, String name, Integer price, LocalDate date) {
+    public DishTo(Integer id, String name, Integer price, LocalDate date,Integer restaurantId) {
         super(id);
         this.name = name;
         this.price = price;
-        this.date=date;
+        this.date = date;
+        this.restaurantId=restaurantId;
     }
 
 }

@@ -16,7 +16,11 @@ import ru.ivanov.restaurantvotingapplication.repository.DishRepository;
 import ru.ivanov.restaurantvotingapplication.to.DishTo;
 import ru.ivanov.restaurantvotingapplication.util.DishUtil;
 
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static ru.ivanov.restaurantvotingapplication.util.ValidationUtil.checkNotFoundWithId;
 
@@ -30,8 +34,8 @@ public class DishServiceImpl implements DishService {
 
     @Cacheable(value = "dishes")
     @Override
-    public List<Dish> getSorted() {
-        return dishRepository.findSortedList();
+    public List<Dish> getByDate(LocalDate date) {
+        return dishRepository.findByDate(date);
     }
 
 
@@ -63,6 +67,22 @@ public class DishServiceImpl implements DishService {
     public void update(Dish dish, DishTo dishTo, Restaurant restaurant) {
         Assert.notNull(dishTo, "dish must not be null");
         checkNotFoundWithId(dishRepository.save(DishUtil.updateFromTo(dish, dishTo, restaurant)), dishTo.id());
+    }
+
+    @Override
+    public List<Dish> getToday(int id) {
+        return dishRepository.findAllByRestaurantId(id)
+                .stream()
+                .filter(dish -> dish.getDate().isEqual(LocalDate.now()))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<Dish> getByDateAndRestaurant(int id, LocalDate localDate) {
+        return dishRepository.findAllByRestaurantId(id)
+                .stream()
+                .filter(dish -> dish.getDate().isEqual(localDate))
+                .collect(Collectors.toList());
     }
 
 }

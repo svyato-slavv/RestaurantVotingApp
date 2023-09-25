@@ -19,12 +19,4 @@ public interface RestaurantService {
 
     List<Restaurant> restaurantList();
 
-    List<Dish> showTodayMenu(int id);
-
-    void deleteOldTodayMenu(int restaurantId);
-
-    List<Dish> showMenuByDate(int id, LocalDate localDate);
-
-    void setNewMenu(List<DishTo> newMenuTo, int restaurantId);
-
 }

@@ -4,12 +4,13 @@ import ru.ivanov.restaurantvotingapplication.model.Dish;
 import ru.ivanov.restaurantvotingapplication.model.Restaurant;
 import ru.ivanov.restaurantvotingapplication.to.DishTo;
 
+import java.time.LocalDate;
 import java.util.List;
 
 
 public interface DishService {
 
-    List<Dish> getSorted();
+    List<Dish> getByDate(LocalDate date);
 
     Dish get(int id);
 
@@ -18,5 +19,7 @@ public interface DishService {
     void delete(int id);
 
     void update(Dish dish, DishTo dishTo, Restaurant restaurant);
+    List<Dish> getToday(int id);
+    List<Dish> getByDateAndRestaurant(int id, LocalDate localDate);
 
 }

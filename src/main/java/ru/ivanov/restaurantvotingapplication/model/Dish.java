@@ -25,11 +25,10 @@ public class Dish extends NamedEntity {
     private int price;
 
 
-    @Column(name = "date", nullable = false, columnDefinition = "timestamp default now()", updatable = false)
+    @Column(name = "date", nullable = false, columnDefinition = "date default now()", updatable = false)
     @Temporal(TemporalType.DATE)
     @NotNull
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-//    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Europe/Moscow")
     private LocalDate date;
 
     @ManyToOne(fetch = FetchType.EAGER)
@@ -48,10 +47,10 @@ public class Dish extends NamedEntity {
         this.date = date;
     }
 
-    public Dish(Integer id, String name, Integer price, Restaurant restaurant) {
+    public Dish(Integer id, String name, Integer price, Restaurant restaurant,LocalDate date) {
         super(id, name);
         this.price = price;
-        this.date = LocalDate.now();
+        this.date = date;
         this.restaurant = restaurant;
     }
 
