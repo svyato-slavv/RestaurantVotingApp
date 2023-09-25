@@ -6,13 +6,14 @@ import ru.ivanov.restaurantvotingapplication.model.Dish;
 import ru.ivanov.restaurantvotingapplication.model.Restaurant;
 import ru.ivanov.restaurantvotingapplication.to.DishTo;
 
-import java.util.Date;
+import java.time.LocalDate;
+
 
 @UtilityClass
 public class DishUtil {
 
     public static DishTo getTo(Dish dish) {
-        return new DishTo(dish.id(), dish.getName(), dish.getPrice());
+        return new DishTo(dish.id(), dish.getName(), dish.getPrice(),dish.getDate());
     }
 
 
@@ -28,7 +29,7 @@ public class DishUtil {
     }
 
     public static Dish getDishFromTo(DishTo dishTo) {
-        return new Dish(dishTo.getId(), dishTo.getName(), dishTo.getPrice(), new Date());
+        return new Dish(dishTo.getId(), dishTo.getName(), dishTo.getPrice(), LocalDate.now());
     }
 
 }

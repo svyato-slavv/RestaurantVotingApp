@@ -6,6 +6,7 @@ import org.hibernate.Hibernate;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.lang.Nullable;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import ru.ivanov.restaurantvotingapplication.error.NotFoundException;
@@ -14,10 +15,14 @@ import ru.ivanov.restaurantvotingapplication.model.Restaurant;
 import ru.ivanov.restaurantvotingapplication.repository.DishRepository;
 import ru.ivanov.restaurantvotingapplication.repository.RestaurantRepository;
 import ru.ivanov.restaurantvotingapplication.service.DishService;
+import ru.ivanov.restaurantvotingapplication.service.RestaurantService;
 import ru.ivanov.restaurantvotingapplication.to.DishTo;
 import ru.ivanov.restaurantvotingapplication.util.DishUtil;
 
 import java.net.URI;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.Date;
 import java.util.List;
 
 
@@ -35,9 +40,10 @@ public class AdminDishController {
 
     private final RestaurantRepository restaurantRepository;
 
+
     @GetMapping()
-    public List<DishTo> getAllWithRestaurant() {
-        log.info("get dishes with their restaurants");
+    public List<DishTo> getAllByDate(@RequestParam LocalDate localDate) {
+        log.info("get dishes by date = {}", localDate);
         return service.getSorted()
                 .stream()
                 .map(DishUtil::getTo)

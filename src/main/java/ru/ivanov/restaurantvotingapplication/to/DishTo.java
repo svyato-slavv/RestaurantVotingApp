@@ -8,6 +8,7 @@ import jakarta.validation.constraints.Size;
 import lombok.*;
 import ru.ivanov.restaurantvotingapplication.model.Restaurant;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 @Data
@@ -16,8 +17,8 @@ public class DishTo extends BaseTo {
     @NotBlank
     @Size(min = 2, max = 128)
     String name;
-    @Schema(hidden = true)
-    Date date;
+//    @Schema(hidden = true)
+    LocalDate date;
     @NotNull
     Integer price;
     @Schema(accessMode = Schema.AccessMode.WRITE_ONLY)
@@ -28,10 +29,11 @@ public class DishTo extends BaseTo {
 
     }
 
-    public DishTo(Integer id, String name, Integer price) {
+    public DishTo(Integer id, String name, Integer price, LocalDate date) {
         super(id);
         this.name = name;
         this.price = price;
+        this.date=date;
     }
 
 }

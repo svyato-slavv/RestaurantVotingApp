@@ -81,7 +81,7 @@ public class RestaurantServiceImpl implements RestaurantService {
     public List<Dish> showTodayMenu(int id) {
         return dishRepository.findAllByRestaurantId(id)
                 .stream()
-                .filter(dish -> DateUtils.isSameDay(dish.getDate(), new Date()))
+                .filter(dish -> dish.getDate().isEqual(LocalDate.now()))
                 .collect(Collectors.toList());
     }
 
@@ -90,7 +90,7 @@ public class RestaurantServiceImpl implements RestaurantService {
         Date date = Date.from(localDate.atStartOfDay().atZone(ZoneId.systemDefault()).toInstant());
         return dishRepository.findAllByRestaurantId(id)
                 .stream()
-                .filter(dish -> DateUtils.isSameDay(dish.getDate(), date))
+                .filter(dish -> dish.getDate().isEqual(localDate))
                 .collect(Collectors.toList());
     }
 

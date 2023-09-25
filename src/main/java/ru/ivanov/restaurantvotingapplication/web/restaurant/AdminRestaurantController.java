@@ -39,26 +39,10 @@ public class AdminRestaurantController extends AbstractRestaurantController {
         return super.getAll();
     }
 
-    //    @GetMapping("/{id}")
-//    public RestaurantTo getWithTodayMenu(@PathVariable int id) {
-//        log.info("get restaurant with today menu with id={}", id);
-//        return super.getWithTodayMenu(id);
-//    }
     @GetMapping("/{id}")
-    public RestaurantTo getRestaurant(@PathVariable int id) {
+    public Restaurant getRestaurant(@PathVariable int id) {
         log.info("get restaurant with today menu with id={}", id);
-        return super.getWithTodayMenu(id);
-    }
-
-    @GetMapping("/{id}/filter")
-    public RestaurantTo getWithMenuByDate(
-            @RequestParam @Nullable LocalDate date,
-            @PathVariable int id) {
-        log.info("get restaurant with menu by date={} with id={}", date, id);
-        if (date == null) {
-            return super.getWithTodayMenu(id);
-        }
-        return super.getWithMenuByDate(id, date);
+        return super.findOne(id);
     }
 
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
@@ -89,16 +73,21 @@ public class AdminRestaurantController extends AbstractRestaurantController {
     }
 
     @GetMapping("/{id}/dishes")
-    public List<DishTo> todayMenuOfRestaurant(@PathVariable int id) {
-        return super.todayMenu(id).stream().map(DishUtil::getTo).toList();
+    public List<DishTo> MenuOfRestaurantByDate(@RequestParam @Nullable LocalDate date,
+                                               @PathVariable int id) {
+        log.info("get restaurant with menu by date={} with id={}", date, id);
+        if (date == null) {
+            return super.todayMenu(id).stream().map(DishUtil::getTo).toList();
+        }
+        return service.showMenuByDate(id, date).stream().map(DishUtil::getTo).toList();
     }
 
-    @PostMapping(value = "/{id}/dishes", consumes = MediaType.APPLICATION_JSON_VALUE)
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void updateMenu(@RequestBody List<DishTo> newMenu, @PathVariable int id) {
-        log.info("set new menu {} in restaurant with id={}", newMenu, id);
-        service.deleteOldTodayMenu(id);
-        service.setNewMenu(newMenu, id);
-    }
+//    @PostMapping(value = "/{id}/dishes", consumes = MediaType.APPLICATION_JSON_VALUE)
+//    @ResponseStatus(HttpStatus.NO_CONTENT)
+//    public void updateMenu(@RequestBody List<DishTo> newMenu, @PathVariable int id) {
+//        log.info("set new menu {} in restaurant with id={}", newMenu, id);
+//        service.deleteOldTodayMenu(id);
+//        service.setNewMenu(newMenu, id);
+//    }
 
 }
