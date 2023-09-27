@@ -41,9 +41,7 @@ public class DishServiceImpl implements DishService {
 
     @Override
     public Dish get(int id) {
-        Dish dish = dishRepository.findById(id).orElseThrow(() -> new NotFoundException("Dish with id = " + id + " not found"));
-        Hibernate.initialize(dish.getRestaurant().getVoteCount(null));
-        return dish;
+        return dishRepository.findById(id).orElseThrow(() -> new NotFoundException("Dish with id = " + id + " not found"));
     }
 
 
@@ -70,19 +68,13 @@ public class DishServiceImpl implements DishService {
     }
 
     @Override
-    public List<Dish> getToday(int id) {
-        return dishRepository.findAllByRestaurantId(id)
-                .stream()
-                .filter(dish -> dish.getDate().isEqual(LocalDate.now()))
-                .collect(Collectors.toList());
+    public List<Dish> getToday(int restaurantId) {
+        return dishRepository.findAllByRestaurantIdAndDate(restaurantId,LocalDate.now());
     }
 
     @Override
-    public List<Dish> getByDateAndRestaurant(int id, LocalDate localDate) {
-        return dishRepository.findAllByRestaurantId(id)
-                .stream()
-                .filter(dish -> dish.getDate().isEqual(localDate))
-                .collect(Collectors.toList());
+    public List<Dish> getByDateAndRestaurant(int restaurantId, LocalDate date) {
+        return dishRepository.findAllByRestaurantIdAndDate(restaurantId, date);
     }
 
 }

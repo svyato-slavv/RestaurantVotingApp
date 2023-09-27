@@ -19,7 +19,7 @@ public interface DishService {
     void delete(int id);
 
     void update(Dish dish, DishTo dishTo, Restaurant restaurant);
-    List<Dish> getToday(int id);
-    List<Dish> getByDateAndRestaurant(int id, LocalDate localDate);
+    List<Dish> getToday(int restaurantId);
+    List<Dish> getByDateAndRestaurant(int restaurantId, LocalDate localDate);
 
 }

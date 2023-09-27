@@ -22,7 +22,6 @@ import java.util.List;
 public class UserRestaurantController extends AbstractRestaurantController {
     static final String REST_URL = "/api/user/restaurants";
 
-    private final RestaurantService restaurantService;
     private final VoteService voteService;
 
     @GetMapping()
@@ -37,10 +36,16 @@ public class UserRestaurantController extends AbstractRestaurantController {
         return super.getWithTodayMenu(id);
     }
 
-    @PostMapping("/{id}")
+    @PostMapping("/{id}/vote")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void vote(@PathVariable int id, @AuthenticationPrincipal AuthUser authUser) {
-        log.info("user with id= {} is voting for restaurant wit id= {}",authUser.id(),id);
-        voteService.vote(restaurantService.get(id), authUser.getUser());
+    public void vote(@PathVariable("id") int restaurantId, @AuthenticationPrincipal AuthUser authUser) {
+        log.info("user with id= {} is voting for restaurant wit id= {}",authUser.id(),restaurantId);
+        voteService.vote(restaurantId, authUser.getUser());
+    }
+    @PutMapping("/{id}/vote")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void updateVote(@PathVariable("id") int restaurantId, @AuthenticationPrincipal AuthUser authUser) {
+        log.info("user with id= {} is voting for restaurant wit id= {}",authUser.id(),restaurantId);
+        voteService.update(restaurantId, authUser.getUser());
     }
 }

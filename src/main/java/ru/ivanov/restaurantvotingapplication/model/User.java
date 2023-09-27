@@ -57,7 +57,6 @@ public class User extends NamedEntity implements Serializable, HasIdAndEmail {
     @ElementCollection(fetch = FetchType.EAGER)
     @JoinColumn
     @OnDelete(action = OnDeleteAction.CASCADE)
-//    @JsonIgnore
     @Schema(accessMode = Schema.AccessMode.READ_ONLY)
     private Set<Role> roles;
 

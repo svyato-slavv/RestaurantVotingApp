@@ -51,6 +51,8 @@ public class UserServiceImpl implements UserService {
     @Transactional
     @Override
     public void update(User user) {
+        user.setPassword(PASSWORD_ENCODER.encode(user.getPassword()));
+        user.setEmail(user.getEmail().toLowerCase());
         Assert.notNull(user, "user must not be null");
         checkNotFoundWithId(repository.save(user), user.id());
     }

@@ -30,7 +30,6 @@ import static ru.ivanov.restaurantvotingapplication.util.ValidationUtil.checkNot
 public class RestaurantServiceImpl implements RestaurantService {
 
     private final RestaurantRepository restaurantRepository;
-    private final DishRepository dishRepository;
 
     @Cacheable(value = "restaurants")
     @Override
@@ -43,7 +42,7 @@ public class RestaurantServiceImpl implements RestaurantService {
     @Override
     public Restaurant get(int id) {
         Restaurant restaurant = restaurantRepository.findById(id).orElseThrow(() -> new NotFoundException("Restaurant with id = " + id + " not found"));
-        Hibernate.initialize(restaurant.getVoteCount(null));
+        restaurant.getVoteCount(null);
         return restaurant;
     }
 

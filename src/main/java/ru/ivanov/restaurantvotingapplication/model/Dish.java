@@ -21,7 +21,6 @@ import java.util.Date;
 @AllArgsConstructor
 public class Dish extends NamedEntity {
     @Column(name = "price", nullable = false)
-    @NotNull
     private int price;
 
 
@@ -31,7 +30,7 @@ public class Dish extends NamedEntity {
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private LocalDate date;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "restaurant_id", nullable = false)
     @JsonManagedReference
     private Restaurant restaurant;

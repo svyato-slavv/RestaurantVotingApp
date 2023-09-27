@@ -7,19 +7,17 @@ import org.springframework.stereotype.Repository;
 import ru.ivanov.restaurantvotingapplication.model.Dish;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
 @Repository
 public interface DishRepository extends JpaRepository<Dish, Integer> {
 
-    List<Dish> findAllByRestaurantId(int id);
-
     @Query("select d from Dish d where d.date=:date")
     List<Dish> findByDate(@Param("date")LocalDate date);
 
-    @Query("select d from Dish d join fetch d.restaurant where d.id=:id")
-    Optional<Dish> findOneWithJoinFetch(@Param("id") int id);
-
+    @Query("SELECT d from Dish d WHERE d.restaurant.id=:restaurantId AND d.date=:date")
+    List<Dish> findAllByRestaurantIdAndDate(@Param("restaurantId") int restaurantId,@Param("date") LocalDate date);
 
 }

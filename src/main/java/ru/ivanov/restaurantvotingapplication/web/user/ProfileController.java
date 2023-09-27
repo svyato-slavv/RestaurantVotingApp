@@ -66,6 +66,6 @@ public class ProfileController {
         log.info("update user with id= {} from userTo= {}", authUser.id(), userTo);
         assureIdConsistent(userTo, authUser.id());
         User user = authUser.getUser();
-        service.prepareAndSave(UsersUtil.updateFromTo(user, userTo));
+        service.update(UsersUtil.updateFromTo(user, userTo));
     }
 }

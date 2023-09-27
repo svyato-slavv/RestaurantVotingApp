@@ -1,7 +1,6 @@
 package ru.ivanov.restaurantvotingapplication.service;
 
 import lombok.RequiredArgsConstructor;
-import org.apache.commons.lang3.time.DateUtils;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -11,38 +10,54 @@ import ru.ivanov.restaurantvotingapplication.model.User;
 import ru.ivanov.restaurantvotingapplication.model.Vote;
 import ru.ivanov.restaurantvotingapplication.repository.VoteRepository;
 
-import java.time.Instant;
-import java.time.LocalDate;
-import java.time.LocalTime;
-import java.time.ZoneId;
-import java.util.Date;
+import java.time.*;
 import java.util.Objects;
-import java.util.Optional;
+
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class VoteServiceImpl implements VoteService {
-    private static final LocalTime CHANGE_MIND = LocalTime.of(11, 0);
+    private static final LocalTime CHANGE_MIND = LocalTime.of(16, 57);
     private final VoteRepository repository;
+    private final RestaurantService restaurantService;
+
 
     @Transactional
     @Override
     @CacheEvict(value = "restaurants", allEntries = true)
-    public void vote(Restaurant restaurant, User user) {
-        Optional<Vote> voteOfDay = repository.findAllByUser_Id(Objects.requireNonNull(user.getId()))
-                .stream()
-                .filter(vote -> DateUtils.isSameDay(vote.getVoteDate(), new Date())).findAny();
-        if (voteOfDay.isPresent()) {
-            Instant instant = CHANGE_MIND.atDate(LocalDate.now()).
-                    atZone(ZoneId.systemDefault()).toInstant();
-            Date changeMind = Date.from(instant);
-
-            if (voteOfDay.get().getVoteDate().before(changeMind)) {
-                repository.updateVote(restaurant.getId(), new Date(), voteOfDay.get().getId());
-            } else throw new VoteException("You have already voted. You can re-vote until: " + CHANGE_MIND);
+    public void vote(Integer restaurantId, User user) {
+        Vote vote = todayVote(user);
+        if (vote!=null) {
+            throw new RuntimeException("You have already voted.");
         } else {
-            repository.save(new Vote(new Date(), restaurant, user));
+            Restaurant restaurant=restaurantService.get(restaurantId);
+            repository.save(new Vote(LocalDateTime.now(), restaurant, user));
         }
+    }
+
+    @Transactional
+    @Override
+    @CacheEvict(value = "restaurants", allEntries = true)
+    public void update(Integer restaurantId, User user) {
+        Vote vote = todayVote(user);
+        if (vote != null) {
+            LocalDateTime changeMind = LocalDateTime.of(LocalDate.now(), CHANGE_MIND);
+            if (vote.getVoteDateTime().isBefore(changeMind)) {
+                repository.updateVote(restaurantId, LocalDateTime.now(), vote.getId());
+            } else throw new VoteException("You can re-vote until: " + CHANGE_MIND);
+        }else{
+            Restaurant restaurant=restaurantService.get(restaurantId);
+            repository.save(new Vote(LocalDateTime.now(), restaurant, user));
+        }
+
+    }
+
+    @Override
+    public Vote todayVote(User user) {
+        LocalDateTime startDay = LocalDate.now().atStartOfDay();
+        LocalDateTime endDay = LocalDate.now().plusDays(1).atStartOfDay();
+        return repository.getTodayVoteByUserId(startDay, endDay, Objects.requireNonNull(user.getId()));
     }
 
 }

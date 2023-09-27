@@ -20,7 +20,6 @@ public class DishTo extends BaseTo {
     LocalDate date;
     @NotNull
     Integer price;
-//    @Schema(accessMode = Schema.AccessMode.WRITE_ONLY)
     Integer restaurantId;
 
 
