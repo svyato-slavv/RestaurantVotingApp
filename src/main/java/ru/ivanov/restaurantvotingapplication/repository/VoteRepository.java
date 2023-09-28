@@ -1,21 +1,26 @@
 package ru.ivanov.restaurantvotingapplication.repository;
 
-import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 import ru.ivanov.restaurantvotingapplication.model.Vote;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Repository
-public interface VoteRepository extends JpaRepository<Vote, Integer> {
+@Transactional(readOnly = true)
+public interface VoteRepository extends BaseRepository<Vote> {
 
     @Modifying
+    @Transactional
     @Query("UPDATE Vote v SET v.restaurant.id = :restaurantId, v.voteDateTime = :voteDateTime WHERE v.id = :id")
-    void updateVote(Integer restaurantId, LocalDateTime voteDateTime, Integer id);
+    void update(Integer restaurantId, LocalDateTime voteDateTime, Integer id);
 
     @Query("SELECT v from Vote v WHERE v.user.id=:userId AND v.voteDateTime >= :startDay AND v.voteDateTime < :endDay ")
-    Vote getTodayVoteByUserId(@Param("startDay") LocalDateTime startDay, @Param("endDay") LocalDateTime endDay, @Param("userId") int userId);
+    Vote getTodayVoteByUserId(LocalDateTime startDay, LocalDateTime endDay, int userId);
+
+    @Query("SELECT v from Vote v WHERE v.user.id=:userId")
+    List<Vote> findAllByUserId(int userId);
 }

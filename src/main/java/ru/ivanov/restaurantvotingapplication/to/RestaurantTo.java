@@ -1,17 +1,13 @@
 package ru.ivanov.restaurantvotingapplication.to;
 
 
+import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.Value;
 
 import java.util.List;
 
-@Value
+@Data
 @EqualsAndHashCode(callSuper = true)
-@Getter
-@Setter
 public class RestaurantTo extends NamedTo {
     List<DishTo> menu;
     Integer voteCount;

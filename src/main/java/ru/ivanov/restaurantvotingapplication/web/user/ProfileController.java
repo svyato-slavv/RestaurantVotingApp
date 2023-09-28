@@ -28,7 +28,6 @@ import static ru.ivanov.restaurantvotingapplication.util.ValidationUtil.checkNew
 public class ProfileController {
     static final String REST_URL = "/api/profile";
     private final UserService service;
-
     private final UniqueMailValidator emailValidator;
 
     @InitBinder

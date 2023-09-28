@@ -23,7 +23,7 @@ public class Vote extends BaseEntity {
     @Temporal(TemporalType.TIMESTAMP)
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime voteDateTime = LocalDateTime.now();
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @NotNull
     @JoinColumn(name = "restaurant_id")
     @JsonManagedReference

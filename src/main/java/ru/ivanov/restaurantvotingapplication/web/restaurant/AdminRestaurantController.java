@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import ru.ivanov.restaurantvotingapplication.model.Restaurant;
 import ru.ivanov.restaurantvotingapplication.service.DishService;
-import ru.ivanov.restaurantvotingapplication.service.RestaurantService;
 import ru.ivanov.restaurantvotingapplication.to.DishTo;
 import ru.ivanov.restaurantvotingapplication.util.DishUtil;
 
@@ -38,21 +37,21 @@ public class AdminRestaurantController extends AbstractRestaurantController {
 
     @GetMapping("/{id}")
     public Restaurant getRestaurant(@PathVariable int id) {
-        log.info("get restaurant with today menu with id={}", id);
+        log.info("get restaurant with id={} with vote count ", id);
         return super.findOne(id);
     }
 
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void update(@RequestBody Restaurant restaurant, @PathVariable int id) {
-        log.info("update restaurant {} with id={}", restaurant, id);
+        log.info("update restaurant with id={}", id);
         assureIdConsistent(restaurant, id);
         super.updateRestaurant(restaurant);
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Restaurant> createWithLocation(@RequestBody Restaurant restaurant) {
-        log.info("create restaurant {}", restaurant);
+        log.info("create restaurant {}", restaurant.getName());
         checkNew(restaurant);
         Restaurant created = super.create(restaurant);
         URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath()
@@ -76,6 +75,6 @@ public class AdminRestaurantController extends AbstractRestaurantController {
         if (date == null) {
             return super.todayMenu(id).stream().map(DishUtil::getTo).toList();
         }
-        return dishService.getByDateAndRestaurant(id,date).stream().map(DishUtil::getTo).toList();
+        return dishService.getByDateAndRestaurant(id, date).stream().map(DishUtil::getTo).toList();
     }
 }

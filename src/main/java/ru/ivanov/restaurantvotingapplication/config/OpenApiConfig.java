@@ -21,12 +21,12 @@ import org.springframework.context.annotation.Configuration;
                 title = "REST API documentation",
                 version = "1.0",
                 description = """
-                         Voting system application
-                         <p><b>Тестовые креденшелы:</b><br>
-                         - user@yandex.ru / password<br>
-                         - admin@gmail.com / admin<br>
-                         - guest@gmail.com / guest</p>
-                         """
+                        Voting system application
+                        <p><b>Тестовые креденшелы:</b><br>
+                        - user@yandex.ru / password<br>
+                        - admin@gmail.com / admin<br>
+                        - guest@gmail.com / guest</p>
+                        """
         ),
         security = @SecurityRequirement(name = "basicAuth")
 )

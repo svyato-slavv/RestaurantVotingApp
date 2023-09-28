@@ -10,15 +10,16 @@ import ru.ivanov.restaurantvotingapplication.model.User;
 import ru.ivanov.restaurantvotingapplication.model.Vote;
 import ru.ivanov.restaurantvotingapplication.repository.VoteRepository;
 
-import java.time.*;
-import java.util.Objects;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.util.List;
 
 
 @Service
 @RequiredArgsConstructor
-@Transactional(readOnly = true)
 public class VoteServiceImpl implements VoteService {
-    private static final LocalTime CHANGE_MIND = LocalTime.of(16, 57);
+    private static final LocalTime CHANGE_MIND = LocalTime.of(11, 0);
     private final VoteRepository repository;
     private final RestaurantService restaurantService;
 
@@ -28,10 +29,10 @@ public class VoteServiceImpl implements VoteService {
     @CacheEvict(value = "restaurants", allEntries = true)
     public void vote(Integer restaurantId, User user) {
         Vote vote = todayVote(user);
-        if (vote!=null) {
+        if (vote != null) {
             throw new RuntimeException("You have already voted.");
         } else {
-            Restaurant restaurant=restaurantService.get(restaurantId);
+            Restaurant restaurant = restaurantService.get(restaurantId);
             repository.save(new Vote(LocalDateTime.now(), restaurant, user));
         }
     }
@@ -42,22 +43,28 @@ public class VoteServiceImpl implements VoteService {
     public void update(Integer restaurantId, User user) {
         Vote vote = todayVote(user);
         if (vote != null) {
-            LocalDateTime changeMind = LocalDateTime.of(LocalDate.now(), CHANGE_MIND);
-            if (vote.getVoteDateTime().isBefore(changeMind)) {
-                repository.updateVote(restaurantId, LocalDateTime.now(), vote.getId());
+            LocalDateTime changeMindDeadLine = LocalDateTime.of(LocalDate.now(), CHANGE_MIND);
+            if (vote.getVoteDateTime().isBefore(changeMindDeadLine)) {
+                repository.update(restaurantId, LocalDateTime.now(), vote.getId());
             } else throw new VoteException("You can re-vote until: " + CHANGE_MIND);
-        }else{
-            Restaurant restaurant=restaurantService.get(restaurantId);
+        } else {
+            Restaurant restaurant = restaurantService.get(restaurantId);
             repository.save(new Vote(LocalDateTime.now(), restaurant, user));
         }
 
     }
 
     @Override
-    public Vote todayVote(User user) {
-        LocalDateTime startDay = LocalDate.now().atStartOfDay();
-        LocalDateTime endDay = LocalDate.now().plusDays(1).atStartOfDay();
-        return repository.getTodayVoteByUserId(startDay, endDay, Objects.requireNonNull(user.getId()));
+    public List<Vote> allVotes(User user) {
+        return repository.findAllByUserId(user.id());
     }
+
+    @Override
+    public Vote todayVote(User user) {
+        LocalDateTime todayStartDay = LocalDate.now().atStartOfDay();
+        LocalDateTime todayEndDay = LocalDate.now().plusDays(1).atStartOfDay();
+        return repository.getTodayVoteByUserId(todayStartDay, todayEndDay, user.id());
+    }
+
 
 }

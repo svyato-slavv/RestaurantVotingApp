@@ -9,12 +9,14 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 import org.springframework.util.CollectionUtils;
 import ru.ivanov.restaurantvotingapplication.HasIdAndEmail;
-
 
 import java.io.Serializable;
 import java.util.*;
@@ -46,8 +48,8 @@ public class User extends NamedEntity implements Serializable, HasIdAndEmail {
     @NotNull
     @Temporal(TemporalType.TIMESTAMP)
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss", timezone = "Europe/Moscow")
-    private Date registered=new Date();
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Europe/Moscow")
+    private Date registered = new Date();
 
     @Enumerated(EnumType.STRING)
     @CollectionTable(name = "user_role",
@@ -60,7 +62,7 @@ public class User extends NamedEntity implements Serializable, HasIdAndEmail {
     @Schema(accessMode = Schema.AccessMode.READ_ONLY)
     private Set<Role> roles;
 
-    @OneToMany(fetch = FetchType.LAZY,mappedBy = "user")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JsonIgnore
     private List<Vote> votes;

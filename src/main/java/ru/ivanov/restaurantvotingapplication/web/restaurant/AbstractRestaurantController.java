@@ -8,9 +8,6 @@ import ru.ivanov.restaurantvotingapplication.service.RestaurantService;
 import ru.ivanov.restaurantvotingapplication.to.RestaurantTo;
 import ru.ivanov.restaurantvotingapplication.util.RestaurantUtil;
 
-import java.time.LocalDate;
-import java.time.ZoneId;
-import java.util.Date;
 import java.util.List;
 
 import static ru.ivanov.restaurantvotingapplication.util.ValidationUtil.checkNew;
@@ -24,18 +21,17 @@ public abstract class AbstractRestaurantController {
 
 
     public List<Restaurant> getAll() {
-        return restaurantService.restaurantList();
+        return restaurantService.getAll();
     }
 
-    public Restaurant findOne(Integer id){
+    public Restaurant findOne(Integer id) {
         return restaurantService.get(id);
     }
 
     public RestaurantTo getWithTodayMenu(int id) {
-        Restaurant restaurant= restaurantService.get(id);
+        Restaurant restaurant = restaurantService.get(id);
         return RestaurantUtil.getTo(restaurant, dishService.getToday(id), restaurant.getVoteCount(null));
     }
-
 
     public Restaurant create(Restaurant restaurant) {
         checkNew(restaurant);

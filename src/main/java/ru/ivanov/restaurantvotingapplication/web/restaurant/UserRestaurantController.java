@@ -7,11 +7,9 @@ import org.springframework.http.MediaType;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import ru.ivanov.restaurantvotingapplication.model.Restaurant;
-import ru.ivanov.restaurantvotingapplication.service.RestaurantService;
 import ru.ivanov.restaurantvotingapplication.service.VoteService;
 import ru.ivanov.restaurantvotingapplication.to.RestaurantTo;
 import ru.ivanov.restaurantvotingapplication.web.AuthUser;
-
 
 import java.util.List;
 
@@ -21,8 +19,8 @@ import java.util.List;
 @RequiredArgsConstructor
 public class UserRestaurantController extends AbstractRestaurantController {
     static final String REST_URL = "/api/user/restaurants";
-
     private final VoteService voteService;
+
 
     @GetMapping()
     public List<Restaurant> restaurantList() {
@@ -32,20 +30,21 @@ public class UserRestaurantController extends AbstractRestaurantController {
 
     @GetMapping("/{id}")
     public RestaurantTo getWithTodayMenu(@PathVariable int id) {
-        log.info("get restaurant with today menu with id= {}",id);
+        log.info("get restaurant with today menu with id= {}", id);
         return super.getWithTodayMenu(id);
     }
 
     @PostMapping("/{id}/vote")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void vote(@PathVariable("id") int restaurantId, @AuthenticationPrincipal AuthUser authUser) {
-        log.info("user with id= {} is voting for restaurant wit id= {}",authUser.id(),restaurantId);
+        log.info("user with id= {} is voting for restaurant wit id= {}", authUser.id(), restaurantId);
         voteService.vote(restaurantId, authUser.getUser());
     }
+
     @PutMapping("/{id}/vote")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void updateVote(@PathVariable("id") int restaurantId, @AuthenticationPrincipal AuthUser authUser) {
-        log.info("user with id= {} is voting for restaurant wit id= {}",authUser.id(),restaurantId);
+        log.info("user with id= {} is changing vote for restaurant wit id= {}", authUser.id(), restaurantId);
         voteService.update(restaurantId, authUser.getUser());
     }
 }

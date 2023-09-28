@@ -17,6 +17,7 @@ public class AuthUser extends org.springframework.security.core.userdetails.User
         super(user.getEmail(), user.getPassword(), user.getRoles());
         this.user = user;
     }
+
     public static AuthUser safeGet() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         if (auth == null) {
@@ -28,6 +29,7 @@ public class AuthUser extends org.springframework.security.core.userdetails.User
     public static AuthUser get() {
         return requireNonNull(safeGet(), "No authorized user found");
     }
+
     public static int authId() {
         return get().id();
     }

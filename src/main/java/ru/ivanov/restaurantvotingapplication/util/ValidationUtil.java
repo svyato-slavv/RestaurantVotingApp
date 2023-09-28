@@ -1,20 +1,10 @@
 package ru.ivanov.restaurantvotingapplication.util;
 
-import jakarta.validation.Validation;
-import jakarta.validation.Validator;
-import jakarta.validation.ValidatorFactory;
 import ru.ivanov.restaurantvotingapplication.HasId;
 import ru.ivanov.restaurantvotingapplication.error.IllegalRequestDataException;
 import ru.ivanov.restaurantvotingapplication.error.NotFoundException;
 
 public class ValidationUtil {
-
-    private static final Validator validator;
-
-    static {
-        ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
-        validator = factory.getValidator();
-    }
 
     private ValidationUtil() {
     }

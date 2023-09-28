@@ -1,23 +1,27 @@
 package ru.ivanov.restaurantvotingapplication.repository;
 
-import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 import ru.ivanov.restaurantvotingapplication.model.Dish;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 
 @Repository
-public interface DishRepository extends JpaRepository<Dish, Integer> {
+@Transactional(readOnly = true)
+public interface DishRepository extends BaseRepository<Dish> {
+
+    @Modifying
+    @Transactional
+    @Query("UPDATE Dish d SET d.name=:name,d.price=:price, d.restaurant.id = :restaurantId WHERE d.id = :id")
+    void update(String name, Integer price, Integer restaurantId, Integer id);
 
     @Query("select d from Dish d where d.date=:date")
-    List<Dish> findByDate(@Param("date")LocalDate date);
+    List<Dish> findByDate(LocalDate date);
 
     @Query("SELECT d from Dish d WHERE d.restaurant.id=:restaurantId AND d.date=:date")
-    List<Dish> findAllByRestaurantIdAndDate(@Param("restaurantId") int restaurantId,@Param("date") LocalDate date);
+    List<Dish> findAllByRestaurantIdAndDate(Integer restaurantId, LocalDate date);
 
 }

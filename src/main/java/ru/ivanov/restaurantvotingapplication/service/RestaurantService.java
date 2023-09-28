@@ -1,10 +1,7 @@
 package ru.ivanov.restaurantvotingapplication.service;
 
-import ru.ivanov.restaurantvotingapplication.model.Dish;
 import ru.ivanov.restaurantvotingapplication.model.Restaurant;
-import ru.ivanov.restaurantvotingapplication.to.DishTo;
 
-import java.time.LocalDate;
 import java.util.List;
 
 public interface RestaurantService {
@@ -17,6 +14,6 @@ public interface RestaurantService {
 
     void delete(int id);
 
-    List<Restaurant> restaurantList();
+    List<Restaurant> getAll();
 
 }

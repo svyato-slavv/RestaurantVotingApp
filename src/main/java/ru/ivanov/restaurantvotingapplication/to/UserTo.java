@@ -6,15 +6,10 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
 import ru.ivanov.restaurantvotingapplication.HasIdAndEmail;
-import ru.ivanov.restaurantvotingapplication.model.Role;
-
-import java.util.Set;
 
 @Data
 @EqualsAndHashCode(callSuper = true)
-@NoArgsConstructor
 public class UserTo extends NamedTo implements HasIdAndEmail {
     @Email
     @NotBlank
@@ -31,13 +26,6 @@ public class UserTo extends NamedTo implements HasIdAndEmail {
         super(id, name);
         this.email = email;
     }
-
-    public UserTo(Integer id, String name, String email, String password) {
-        super(id, name);
-        this.email = email;
-        this.password = password;
-    }
-
 
     @Override
     public String toString() {

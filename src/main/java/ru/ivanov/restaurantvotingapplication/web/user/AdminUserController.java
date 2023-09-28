@@ -26,9 +26,7 @@ import static ru.ivanov.restaurantvotingapplication.util.ValidationUtil.checkNew
 @RequiredArgsConstructor
 public class AdminUserController {
     static final String REST_URL = "/api/admin/users";
-
     private final UserService service;
-
     private final UniqueMailValidator emailValidator;
 
     @InitBinder

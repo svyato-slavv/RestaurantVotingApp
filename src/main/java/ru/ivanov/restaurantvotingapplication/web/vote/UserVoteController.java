@@ -12,6 +12,8 @@ import ru.ivanov.restaurantvotingapplication.to.VoteTo;
 import ru.ivanov.restaurantvotingapplication.util.VoteUtil;
 import ru.ivanov.restaurantvotingapplication.web.AuthUser;
 
+import java.util.List;
+
 @Slf4j
 @RestController
 @RequestMapping(value = UserVoteController.REST_URL, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -20,9 +22,17 @@ public class UserVoteController {
     static final String REST_URL = "/api/user/votes";
     private final VoteService voteService;
 
-    @GetMapping
-    public VoteTo getVote(@AuthenticationPrincipal AuthUser authUser) {
-        log.info("find vote for user with id = {}", authUser.id());
+    @GetMapping()
+    public List<VoteTo> getVotes(@AuthenticationPrincipal AuthUser authUser) {
+        log.info("find all votes for user with id = {}", authUser.id());
+        return voteService.allVotes(authUser.getUser())
+                .stream()
+                .map(VoteUtil::getTo).toList();
+    }
+
+    @GetMapping("/today")
+    public VoteTo getTodayVote(@AuthenticationPrincipal AuthUser authUser) {
+        log.info("find today vote for user with id = {}", authUser.id());
         return VoteUtil.getTo(voteService.todayVote(authUser.getUser()));
     }
 }

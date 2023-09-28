@@ -18,7 +18,8 @@ public class UsersUtil {
         user.setPassword(userTo.getPassword());
         return user;
     }
-    public UserTo getTo(User user){
+
+    public UserTo getTo(User user) {
         return new UserTo(user.getId(), user.getName(), user.getEmail());
     }
 }
