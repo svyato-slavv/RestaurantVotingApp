@@ -36,6 +36,10 @@ public class Restaurant extends NamedEntity {
     @JsonIgnore
     private List<Vote> votes = new ArrayList<>();
 
+    public Restaurant(Integer id, String name) {
+        super(id, name);
+    }
+
     public Restaurant(List<Dish> dishes) {
         this.dishes = dishes;
     }

@@ -14,7 +14,6 @@ import ru.ivanov.restaurantvotingapplication.web.AuthUser;
 @AllArgsConstructor
 public class UniqueMailValidator implements org.springframework.validation.Validator {
     public static final String EXCEPTION_DUPLICATE_EMAIL = "User with this email already exists";
-
     private final UserRepository repository;
     private final HttpServletRequest request;
 

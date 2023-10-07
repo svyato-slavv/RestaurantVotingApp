@@ -34,5 +34,16 @@ public class Vote extends BaseEntity {
     @JsonIgnore
     private User user;
 
+    public Vote(Integer id, User user, Restaurant restaurant) {
+        super(id);
+        this.user = user;
+        this.restaurant = restaurant;
+    }
 
+    public Vote(Integer id, LocalDateTime voteDateTime, Restaurant restaurant, User user) {
+        super(id);
+        this.voteDateTime = voteDateTime;
+        this.restaurant = restaurant;
+        this.user = user;
+    }
 }

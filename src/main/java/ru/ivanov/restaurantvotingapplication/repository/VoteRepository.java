@@ -8,6 +8,7 @@ import ru.ivanov.restaurantvotingapplication.model.Vote;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 @Transactional(readOnly = true)
@@ -19,8 +20,12 @@ public interface VoteRepository extends BaseRepository<Vote> {
     void update(Integer restaurantId, LocalDateTime voteDateTime, Integer id);
 
     @Query("SELECT v from Vote v WHERE v.user.id=:userId AND v.voteDateTime >= :startDay AND v.voteDateTime < :endDay ")
-    Vote getTodayVoteByUserId(LocalDateTime startDay, LocalDateTime endDay, int userId);
+    Optional<Vote> getTodayVoteByUserId(LocalDateTime startDay, LocalDateTime endDay, int userId);
 
     @Query("SELECT v from Vote v WHERE v.user.id=:userId")
     List<Vote> findAllByUserId(int userId);
+
+    @Query("select v from Vote v where v.id =:id and v.user.id =:userId")
+    Optional<Vote> findByIdAndUserId(int id, int userId);
+
 }

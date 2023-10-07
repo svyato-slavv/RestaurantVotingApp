@@ -15,16 +15,24 @@ public class UserTo extends NamedTo implements HasIdAndEmail {
     @NotBlank
     @Size(max = 128)
     String email;
-
     @NotBlank
     @Size(min = 5, max = 32)
     @Schema(accessMode = Schema.AccessMode.WRITE_ONLY)
     String password;
 
+    public UserTo(){
+
+    }
 
     public UserTo(Integer id, String name, String email) {
         super(id, name);
         this.email = email;
+    }
+
+    public UserTo(Integer id, String name, String email, String password) {
+        super(id, name);
+        this.email = email;
+        this.password = password;
     }
 
     @Override

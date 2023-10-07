@@ -19,6 +19,10 @@ public class UsersUtil {
         return user;
     }
 
+    public User getFromTo(UserTo userTo) {
+        return new User(userTo.getId(), userTo.getName(), userTo.getEmail(), userTo.getPassword(), Role.USER);
+    }
+
     public UserTo getTo(User user) {
         return new UserTo(user.getId(), user.getName(), user.getEmail());
     }

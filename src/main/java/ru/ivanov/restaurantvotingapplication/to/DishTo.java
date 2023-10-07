@@ -19,15 +19,12 @@ public class DishTo extends BaseTo {
     Integer price;
     Integer restaurantId;
 
-    public DishTo() {
 
-    }
-
-    public DishTo(Integer id, String name, Integer price, LocalDate date, Integer restaurantId) {
+    public DishTo(Integer id, String name, LocalDate date, Integer price, Integer restaurantId) {
         super(id);
         this.name = name;
-        this.price = price;
         this.date = date;
+        this.price = price;
         this.restaurantId = restaurantId;
     }
 

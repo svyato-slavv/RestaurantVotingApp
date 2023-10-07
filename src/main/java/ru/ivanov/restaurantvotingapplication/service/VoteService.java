@@ -4,15 +4,19 @@ import ru.ivanov.restaurantvotingapplication.model.User;
 import ru.ivanov.restaurantvotingapplication.model.Vote;
 
 import java.util.List;
+import java.util.Optional;
 
 
 public interface VoteService {
-    void vote(Integer restaurantId, User user);
+
+    Vote get(int id, Integer userId);
+
+    Vote vote(Integer restaurantId, User user);
 
     void update(Integer restaurantId, User user);
 
     List<Vote> allVotes(User user);
 
-    Vote todayVote(User user);
+    Optional<Vote> todayVote(User user);
 
 }

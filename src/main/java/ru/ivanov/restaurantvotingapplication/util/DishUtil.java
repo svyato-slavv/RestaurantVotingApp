@@ -11,7 +11,7 @@ import ru.ivanov.restaurantvotingapplication.to.DishTo;
 public class DishUtil {
 
     public static DishTo getTo(Dish dish) {
-        return new DishTo(dish.id(), dish.getName(), dish.getPrice(), dish.getDate(), dish.getRestaurant().getId());
+        return new DishTo(dish.id(), dish.getName(), dish.getDate(), dish.getPrice(), dish.getRestaurant().getId());
     }
 
 

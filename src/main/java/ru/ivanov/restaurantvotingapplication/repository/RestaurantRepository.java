@@ -14,4 +14,5 @@ public interface RestaurantRepository extends BaseRepository<Restaurant> {
     @Query("UPDATE Restaurant r SET r.name=:name WHERE r.id = :id")
     void update(String name, Integer id);
 
+
 }

@@ -4,13 +4,17 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import ru.ivanov.restaurantvotingapplication.model.Restaurant;
+import ru.ivanov.restaurantvotingapplication.model.Vote;
 import ru.ivanov.restaurantvotingapplication.service.VoteService;
 import ru.ivanov.restaurantvotingapplication.to.RestaurantTo;
 import ru.ivanov.restaurantvotingapplication.web.AuthUser;
 
+import java.net.URI;
 import java.util.List;
 
 @Slf4j
@@ -34,11 +38,13 @@ public class UserRestaurantController extends AbstractRestaurantController {
         return super.getWithTodayMenu(id);
     }
 
-    @PostMapping("/{id}/vote")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void vote(@PathVariable("id") int restaurantId, @AuthenticationPrincipal AuthUser authUser) {
-        log.info("user with id= {} is voting for restaurant wit id= {}", authUser.id(), restaurantId);
-        voteService.vote(restaurantId, authUser.getUser());
+    @PostMapping(value = "/{id}/vote")
+    public ResponseEntity<Vote> createVoteWithLocation(@PathVariable("id") int restaurantId, @AuthenticationPrincipal AuthUser authUser) {
+        Vote created = voteService.vote(restaurantId, authUser.getUser());
+        URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath()
+                .path("/api/user/votes" + "/{id}")
+                .buildAndExpand(created.getId()).toUri();
+        return ResponseEntity.created(uriOfNewResource).body(created);
     }
 
     @PutMapping("/{id}/vote")

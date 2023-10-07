@@ -29,11 +29,11 @@ public class AdminUserController {
     private final UserService service;
     private final UniqueMailValidator emailValidator;
 
+
     @InitBinder
     protected void initBinder(WebDataBinder binder) {
         binder.addValidators(emailValidator);
     }
-
 
     @GetMapping()
     public List<User> getAll() {
@@ -73,6 +73,4 @@ public class AdminUserController {
         log.info("delete user with id= {}", id);
         service.delete(id);
     }
-
-
 }
